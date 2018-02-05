@@ -380,7 +380,7 @@ article .meta a.comments_btn:hover {
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
         <script type="text/javascript">
         init_mathjax = function() {
             if (window.MathJax) {
@@ -388,7 +388,8 @@ article .meta a.comments_btn:hover {
                 MathJax.Hub.Config({
                     tex2jax: {
                         inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                        processEscapes: true
                     },
                     displayAlign: 'left', // Change this to 'center' to center equations.
                     "HTML-CSS": {
@@ -416,7 +417,7 @@ article .meta a.comments_btn:hover {
                 </div>
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation" id="theNavbar">
 		    <ul class="nav navbar-nav navbar-right">
-                            <li><a href="/pages/about.html" title="About">About</a></li>
+                            <li><a href="samplers-demo/pages/about.html" title="About">About</a></li>
                     </ul>
                 </nav>
             </div>
@@ -429,7 +430,7 @@ article .meta a.comments_btn:hover {
 
         <ul class="double-list">
             <li>
-                <a href='/blog/2018/02/01/samplers-samplers-everywhere/'>
+                <a href='/pages/samplers-samplers-everywhere/'>
                     <h2>Samplers, samplers, everywhere...</h2>
                     <span>01.02.2018</span>
                 </a>
