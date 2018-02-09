@@ -276,17 +276,17 @@ article .meta a.comments_btn:hover {
   max-width: 700px;
 }
 .post h2:before {
-  content: "# ";
+  /*content: "# ";*/
   font-weight: bold;
   color: #DDD;
 }
 .post h3:before {
-  content: "## ";
+  /*content: "## ";*/
   font-weight: bold;
   color: #DDD;
 }
 .post h4:before {
-  content: "### ";
+  /*content: "### ";*/
   font-weight: bold;
   color: #DDD;
 }
@@ -463,8 +463,10 @@ the <a href="http://www.physics.gla.ac.uk/igr/">Institute for Gravitational Rese
     </article>
 </div>
 
-<footer class="about">
-<div class="social-links">
+<div class="container post">
+<article> <!-- Use article tag so that "social-links" class can be used -->
+<header class="about container">
+<div class="social-links container">
 	    <ul>
 	      <li><a href="http://www.astro.gla.ac.uk/~matthew" rel="me">website</a></li>
 	      <li><a href="http://cosmiczoo.blogspot.com" rel="me">blog</a></li>
@@ -473,7 +475,10 @@ the <a href="http://www.physics.gla.ac.uk/igr/">Institute for Gravitational Rese
 	      <li><a class="nodec icon-stackoverflow" href="https://stackoverflow.com/users/1862861/matt-pitkin" rel="me"></a></li>
 	    </ul>
 </div>
-</footer>
+</header>
+</article>
+</div>
+
 
         </div>
 <!--
