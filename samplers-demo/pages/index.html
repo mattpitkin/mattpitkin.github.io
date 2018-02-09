@@ -431,19 +431,19 @@ article .meta a.comments_btn:hover {
           <h1>Samplers demo</h1>
 	  
         <div class="article_content">
-            <p>This site aims gives a demonstration of nine different <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>
+            <p>This site aims gives a demonstration of <a href="#Samplers">nine different</a> <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>
 and <a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">nested sampling</a> algorithms that are
 either written in Python, or have Python-wrapper implementations. The demostration is a simple toy
-model of estimating the posteriors on the parameters of a straight line in Gaussian noise. The
-samplers used are:</p>
-<h2>MCMC:</h2>
+model of estimating the posteriors on the parameters of a straight line in Gaussian noise of known variance.</p>
+<h2>Samplers</h2>
+<p>The MCMC samplers used are:</p>
 <ol>
 <li><a href="http://dfm.io/emcee/current/">emcee</a></li>
 <li><a href="http://docs.pymc.io/">PyMC3</a></li>
 <li><a href="http://pystan.readthedocs.io/en/latest/">PyStan</a></li>
 <li><a href="https://pyjags.readthedocs.io/en/latest/">PyJAGS</a></li>
 </ol>
-<h2>Nested Sampling:</h2>
+<p>The nested sampling algorithms implementations uses are:</p>
 <ol>
 <li><a href="http://kylebarbary.com/nestle/">Nestle</a></li>
 <li><a href="https://johnveitch.github.io/cpnest/">CPNest</a></li>
@@ -453,11 +453,36 @@ samplers used are:</p>
 </ol>
 <p>A page showing a demonstration and comparison of all the samplers on a fixed dataset can be found
 <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">here</a>.</p>
-<p>Standalone example for each sampler will be coming soon, along with information on <a href="https://docs.docker.com/">Docker</a>
-images that can be used to run all the samplers mentioned above.</p>
+<h2>Examples</h2>
+<p>Standalone examples for each sampler can be found at the links below:</p>
+<ul>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/emcee/">emcee example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pymc3/">PyMC3 example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pystan/">PyStan example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pyjags/">PyJAGS example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/nestle/">Nestle example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/cpnest/">CPNest example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pymultinest/">PyMultiNest example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/dnest4/">DNest4 example</a></li>
+<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pypolychord/">PyPolyChord example</a></li>
+</ul>
+<p>Information on <a href="https://docs.docker.com/">Docker</a> images that can be used to run all
+the samplers mentioned above can be found <a href="http://mattpitkin.github.io/samplers-demo/pages/docker/">here</a>.</p>
+<h2>Acknowlegdments</h2>
+<p>The samplers mentioned above are obviously the work of a lot of people and I am very much indebted to
+them for producing the software. Hopefully, this site will make it slightly easier for some more to
+get started using them. References for each of the packages can be found in the appropriate section of
+the <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">demonstration page</a>.</p>
+<p>This site is heavily based on the <a href="http://jakevdp.github.io/"><em>Pythonic Perambulations</em></a> blog by <a href="http://vanderplas.com/">Jake
+VanderPlas</a>, and was created using <a href="http://docs.getpelican.com/en/stable/">Pelican</a>.
+The source code for the site can be found on GitHub <a href="https://github.com/mattpitkin/samplers-demo/">here</a>,
+and any problems/suggestions can be submitted as
+<a href="https://github.com/mattpitkin/samplers-demo/issues">issues</a> there, or left as comments on the various pages
+here.</p>
 <h3>The author</h3>
-<p>My name is Matthew Pitkin and I'm an astrophysicist working on gravitational wave data analysis in
-the <a href="http://www.physics.gla.ac.uk/igr/">Institute for Gravitational Research</a> at the <a href="https://www.gla.ac.uk/">University of Glasgow</a>.</p>
+<p>My name is <a href="http://www.astro.gla.ac.uk/~matthew">Matthew Pitkin</a> and I'm an astrophysicist working on gravitational wave data analysis in
+the <a href="http://www.physics.gla.ac.uk/igr/">Institute for Gravitational Research</a> at the
+<a href="https://www.gla.ac.uk/">University of Glasgow</a>.</p>
         </div>
 
     </article>

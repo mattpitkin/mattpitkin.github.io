@@ -1,5 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Samplers Demo - articles</title><link href="http://mattpitkin.github.io/samplers-demo/" rel="alternate"></link><link href="http://mattpitkin.github.io/samplers-demo/feeds/articles.atom.xml" rel="self"></link><id>http://mattpitkin.github.io/samplers-demo/</id><updated>2018-02-09T12:40:00+00:00</updated><entry><title>An example using CPNest</title><link href="http://mattpitkin.github.io/samplers-demo/pages/cpnest/" rel="alternate"></link><published>2018-02-09T12:40:00+00:00</published><updated>2018-02-09T12:40:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-09:/samplers-demo/pages/cpnest/</id><summary type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Samplers Demo - articles</title><link href="http://mattpitkin.github.io/samplers-demo/" rel="alternate"></link><link href="http://mattpitkin.github.io/samplers-demo/feeds/articles.atom.xml" rel="self"></link><id>http://mattpitkin.github.io/samplers-demo/</id><updated>2018-02-09T15:03:00+00:00</updated><entry><title>Docker images</title><link href="http://mattpitkin.github.io/samplers-demo/pages/docker/" rel="alternate"></link><published>2018-02-09T15:03:00+00:00</published><updated>2018-02-09T15:03:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-09:/samplers-demo/pages/docker/</id><summary type="html">&lt;p&gt;I have created &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; images, available on &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;DockerHub&lt;/a&gt;,
+which have all the samplers included in this demonstration installed.&lt;/p&gt;
+&lt;p&gt;The images with the codes installed using a Python 2, Python 3, or a
+&lt;a href="http://jupyter.org/"&gt;Jupyter notebook&lt;/a&gt; server (containing both Python 2 and 3 kernels) can be downloaded using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker pull mattpitkin/samplers …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;I have created &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; images, available on &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;DockerHub&lt;/a&gt;,
+which have all the samplers included in this demonstration installed.&lt;/p&gt;
+&lt;p&gt;The images with the codes installed using a Python 2, Python 3, or a
+&lt;a href="http://jupyter.org/"&gt;Jupyter notebook&lt;/a&gt; server (containing both Python 2 and 3 kernels) can be downloaded using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker pull mattpitkin/samplers:python2
+docker pull mattpitkin/samplers:python3
+docker pull mattpitkin/samplers:jupyter
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;mattpitkin/samplers:python2&lt;/code&gt; can be used to run, e.g., the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/emcee/"&gt;emcee test script&lt;/a&gt;,
+assuming the script is downloaded to &lt;code&gt;${HOME}&lt;/code&gt;, with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run -it -v &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;:/work mattpitkin/samplers:python2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A Jupyter server to run, e.g., the notebook from which the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/"&gt;demonstration page&lt;/a&gt; was created, can be run using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run -it -v &lt;span class="o"&gt;{&lt;/span&gt;notebook_location&lt;span class="o"&gt;}&lt;/span&gt;:/home/jovyan/work -e &lt;span class="nv"&gt;NB_UID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1001&lt;/span&gt; --user root --rm -p &lt;span class="m"&gt;8888&lt;/span&gt;:8888 mattpitkin/samplers:jupyter
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;where &lt;code&gt;{notebook_location}&lt;/code&gt; is the local path under which the notebooks you want to run live.&lt;/p&gt;
+&lt;h2&gt;Docker files&lt;/h2&gt;
+&lt;p&gt;The Docker files for each of the above images are given below. Note that these required you to
+have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#PyMultiNest"&gt;MultiNest&lt;/a&gt; and &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#PyPolyChord"&gt;PolyChord&lt;/a&gt; tarballs.&lt;/p&gt;
+&lt;figure class='code'&gt;
+&lt;figcaption&gt;&lt;span&gt;python2&lt;/span&gt; &lt;a href='/samplers-demo/downloads/code/dockerfiles/python2/Dockerfile'&gt;download&lt;/a&gt;&lt;/figcaption&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; ubuntu:xenial&lt;/span&gt;
+&lt;span class="c"&gt;# installs Ubuntu 16.04&lt;/span&gt;
+
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /samplers&lt;/span&gt;
+
+&lt;span class="c"&gt;### Distribution package installs&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get update
+
+&lt;span class="c"&gt;# install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng
+
+&lt;span class="c"&gt;# install light(ish) weight LaTeX&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y --no-install-recommends texlive texlive-latex-extra
+
+&lt;span class="c"&gt;# install pip&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y python-pip
+
+&lt;span class="c"&gt;# Install JAGS&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y jags
+
+&lt;span class="c"&gt;# clean things up&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get -y autoremove &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get -y clean
+
+&lt;span class="c"&gt;### Python modules installed via conda and pip&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --upgrade pip
+
+&lt;span class="c"&gt;# Install numpy, scipy, matplotlib and corner&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org numpy scipy matplotlib corner
+
+&lt;span class="c"&gt;# Install samplers&lt;/span&gt;
+&lt;span class="c"&gt;# Install PyJAGS from PyPI&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pyjags
+
+&lt;span class="c"&gt;# Install emcee&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org emcee
+
+&lt;span class="c"&gt;# Install PyStan&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pystan
+
+&lt;span class="c"&gt;# Install PyMC3&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pymc3
+
+&lt;span class="c"&gt;# Install Nestle&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org nestle
+
+&lt;span class="c"&gt;# Install CPNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org cpnest
+
+&lt;span class="c"&gt;# Install MultiNest &lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; MultiNest_v3.10_CMake.tar.gz /samplers&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; MultiNest_v3.10_CMake/multinest/build &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cmake .. &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd
+
+&lt;span class="c"&gt;# Install PyMultiNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pymultinest
+
+&lt;span class="c"&gt;# Install DNest4 (and clean up so that Python2 install can also proceed)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/eggplantbren/DNest4.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/DNest4/python &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/usr/local
+
+&lt;span class="c"&gt;# Add PolyChord&lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; PolyChord_v1.12.tar.gz /samplers&lt;/span&gt;
+
+&lt;span class="c"&gt;# Install PyPolyChord (don&amp;#39;t use the make file, use setup.py)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/PolyChord &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="nv"&gt;MPI&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; touch PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; ldd lib/libchord.so &lt;span class="p"&gt;|&lt;/span&gt; grep -o &lt;span class="s1"&gt;&amp;#39;/.*libmpi.so[^/]* &amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;{print &amp;quot;export LD_PRELOAD=&amp;quot;$$1&amp;quot;:$$LD_PRELOAD&amp;quot;}&amp;#39;&lt;/span&gt; &amp;gt; PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; python setup.py install
+
+&lt;span class="c"&gt;# Add getdist package for reading in PolyChord output&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org getdist
+
+&lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib&lt;/span&gt;
+
+&lt;span class="c"&gt;# change to new working directory&lt;/span&gt;
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /work&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/figure&gt;
+
+&lt;figure class='code'&gt;
+&lt;figcaption&gt;&lt;span&gt;python3&lt;/span&gt; &lt;a href='/samplers-demo/downloads/code/dockerfiles/python3/Dockerfile'&gt;download&lt;/a&gt;&lt;/figcaption&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; ubuntu:xenial&lt;/span&gt;
+&lt;span class="c"&gt;# installs Ubuntu 16.04&lt;/span&gt;
+
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /samplers&lt;/span&gt;
+
+&lt;span class="c"&gt;### Distribution package installs&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get update
+
+&lt;span class="c"&gt;# install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng
+
+&lt;span class="c"&gt;# install light(ish) weight LaTeX&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y --no-install-recommends texlive texlive-latex-extra
+
+&lt;span class="c"&gt;# install pip&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y python3 python3-dev python3-pip python3-tk
+
+&lt;span class="c"&gt;# Install JAGS&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y jags
+
+&lt;span class="c"&gt;# clean things up&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get -y autoremove &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get -y clean
+
+&lt;span class="c"&gt;### Python modules installed via conda and pip&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --upgrade pip
+
+&lt;span class="c"&gt;# Install numpy, scipy, matplotlib and corner&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org numpy scipy matplotlib corner
+
+&lt;span class="c"&gt;# Install samplers&lt;/span&gt;
+&lt;span class="c"&gt;# Install PyJAGS from PyPI&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org pyjags
+
+&lt;span class="c"&gt;# Install emcee&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org emcee
+
+&lt;span class="c"&gt;# Install PyStan&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org pystan
+
+&lt;span class="c"&gt;# Install PyMC3&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org pymc3
+
+&lt;span class="c"&gt;# Install Nestle&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org nestle
+
+&lt;span class="c"&gt;# Install CPNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org cpnest
+
+&lt;span class="c"&gt;# Install MultiNest &lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; MultiNest_v3.10_CMake.tar.gz /samplers&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; MultiNest_v3.10_CMake/multinest/build &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cmake .. &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd
+
+&lt;span class="c"&gt;# Install PyMultiNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org pymultinest
+
+&lt;span class="c"&gt;# Install DNest4 (and clean up so that Python2 install can also proceed)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/eggplantbren/DNest4.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/DNest4/python &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python3 setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/usr/local
+
+&lt;span class="c"&gt;# Add PolyChord&lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; PolyChord_v1.12.tar.gz /samplers&lt;/span&gt;
+
+&lt;span class="c"&gt;# Install PyPolyChord (don&amp;#39;t use the make file, use setup.py)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/PolyChord &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="nv"&gt;MPI&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; touch PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; ldd lib/libchord.so &lt;span class="p"&gt;|&lt;/span&gt; grep -o &lt;span class="s1"&gt;&amp;#39;/.*libmpi.so[^/]* &amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;{print &amp;quot;export LD_PRELOAD=&amp;quot;$$1&amp;quot;:$$LD_PRELOAD&amp;quot;}&amp;#39;&lt;/span&gt; &amp;gt; PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; python3 setup.py install
+
+&lt;span class="c"&gt;# Add getdist package for reading in PolyChord output&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org getdist
+
+&lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib&lt;/span&gt;
+
+&lt;span class="c"&gt;# update alternatives to python3 (generally not what you should do, but it shouldn&amp;#39;t be a problem in this container)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; update-alternatives --install /usr/bin/python python /usr/bin/python3 &lt;span class="m"&gt;10&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 &lt;span class="m"&gt;10&lt;/span&gt;
+
+&lt;span class="c"&gt;# set PYTHONIOENCODING to utf-8&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; PYTHONIOENCODING utf-8&lt;/span&gt;
+
+&lt;span class="c"&gt;# change to new working directory&lt;/span&gt;
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /work&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/figure&gt;
+
+&lt;figure class='code'&gt;
+&lt;figcaption&gt;&lt;span&gt;jupyter&lt;/span&gt; &lt;a href='/samplers-demo/downloads/code/dockerfiles/jupyter/Dockerfile'&gt;download&lt;/a&gt;&lt;/figcaption&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; jupyter/minimal-notebook&lt;/span&gt;
+&lt;span class="c"&gt;# Jupyter minimal notebook installs Ubuntu 16.04 with a jupyter notebook with a python3 kernel&lt;/span&gt;
+
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /samplers&lt;/span&gt;
+
+USER root
+
+&lt;span class="c"&gt;### Distribution package installs&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get update
+
+&lt;span class="c"&gt;# install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev scons dvipng
+
+&lt;span class="c"&gt;# Install JAGS&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y jags
+
+&lt;span class="c"&gt;# clean things up&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get -y autoremove &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get -y clean
+
+&lt;span class="c"&gt;### Python modules installed via conda and pip&lt;/span&gt;
+
+&lt;span class="c"&gt;# Install numpy, scipy&lt;/span&gt;
+USER &lt;span class="nv"&gt;$NB_USER&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; conda install -y numpy
+&lt;span class="k"&gt;RUN&lt;/span&gt; conda install -y scipy
+USER root
+
+&lt;span class="c"&gt;# Install matplotlib and corner&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org matplotlib corner
+
+&lt;span class="c"&gt;# Install samplers&lt;/span&gt;
+&lt;span class="c"&gt;# Install PyJAGS from PyPI&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pyjags
+
+&lt;span class="c"&gt;# Install emcee&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org emcee
+
+&lt;span class="c"&gt;# Install PyStan&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pystan
+
+&lt;span class="c"&gt;# Install PyMC3&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pymc3
+
+&lt;span class="c"&gt;# Install Nestle&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org nestle
+
+&lt;span class="c"&gt;# Install CPNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org cpnest
+
+&lt;span class="c"&gt;# Install MultiNest &lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; MultiNest_v3.10_CMake.tar.gz /samplers&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; MultiNest_v3.10_CMake/multinest/build &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cmake .. &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd
+
+&lt;span class="c"&gt;# Install PyMultiNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org pymultinest
+
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib&lt;/span&gt;
+
+&lt;span class="c"&gt;# Install DNest4 (and clean up so that Python2 install can also proceed)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/eggplantbren/DNest4.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; chown -R &lt;span class="nv"&gt;$NB_USER&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/DNest4
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/DNest4/python &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/opt/conda &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rm -rf build &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rm -rf dist &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rm -rf dnest4.egg-info &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rm dnest4/_dnest4.cpp
+
+&lt;span class="c"&gt;# set working directory as &amp;quot;/home/jovyan/work&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; ${HOME}/work&lt;/span&gt;
+
+&lt;span class="c"&gt;# Add PolyChord (don&amp;#39;t install for Python 3 as it does not work yet)&lt;/span&gt;
+&lt;span class="k"&gt;ADD&lt;/span&gt;&lt;span class="s"&gt; PolyChord_v1.12.tar.gz ${HOME}&lt;/span&gt;
+
+&lt;span class="c"&gt;# Install PyPolyChord (don&amp;#39;t use the make file, use setup.py)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/PolyChord &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="nv"&gt;MPI&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; touch PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; ldd lib/libchord.so &lt;span class="p"&gt;|&lt;/span&gt; grep -o &lt;span class="s1"&gt;&amp;#39;/.*libmpi.so[^/]* &amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;{print &amp;quot;export LD_PRELOAD=&amp;quot;$$1&amp;quot;:$$LD_PRELOAD&amp;quot;}&amp;#39;&lt;/span&gt; &amp;gt; PyPolyChord/.ld_preload.sh&lt;span class="p"&gt;;&lt;/span&gt; python setup.py install &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; chmod -R a+rw &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/PolyChord
+
+&lt;span class="c"&gt;# Install getdist for PolyChord post-processing&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org getdist
+
+&lt;span class="c"&gt;# switch back to non-root user&lt;/span&gt;
+USER &lt;span class="nv"&gt;$NB_USER&lt;/span&gt;
+
+&lt;span class="c"&gt;# add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; conda create -y -n py27 &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;.7 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; /bin/bash -c &lt;span class="s2"&gt;&amp;quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; ipython kernel install --user&amp;quot;&lt;/span&gt;
+
+USER root
+&lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;LD_LIBRARY_PATH=/usr/local/lib:&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/PolyChord/lib&amp;quot;&lt;/span&gt; &amp;gt;&amp;gt; /etc/environment
+
+&lt;span class="c"&gt;# switch back to non-root user&lt;/span&gt;
+USER &lt;span class="nv"&gt;$NB_USER&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/figure&gt;</content><category term="Docker"></category></entry><entry><title>An example using CPNest</title><link href="http://mattpitkin.github.io/samplers-demo/pages/cpnest/" rel="alternate"></link><published>2018-02-09T12:40:00+00:00</published><updated>2018-02-09T12:40:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-09:/samplers-demo/pages/cpnest/</id><summary type="html">
 
 &lt;p&gt;Here we show a standalone example of using &lt;a href="https://johnveitch.github.io/cpnest/"&gt;CPNest&lt;/a&gt; to
 estimate the parameters of a straight line model in data with Gaussian noise. The
@@ -67,7 +365,7 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
     &lt;span class="c1"&gt;# set the m bounds to be +/- 10sigma about the mean&lt;/span&gt;
     &lt;span class="n"&gt;mbounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
-    &lt;span class="c1"&gt;# NOTE: the bounds could instead be set through arguments pass to the __init__&lt;/span&gt;
+    &lt;span class="c1"&gt;# NOTE: the bounds could instead be set through arguments passed to the __init__&lt;/span&gt;
     &lt;span class="c1"&gt;# function for the class if wanted&lt;/span&gt;
     &lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mbounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cbounds&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# upper and lower bounds on each parameter (required for the class)&lt;/span&gt;
 
@@ -437,7 +735,7 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
 &lt;span class="n"&gt;ndims&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;        &lt;span class="c1"&gt;# two parameters&lt;/span&gt;
 &lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;         &lt;span class="c1"&gt;# the stopping criterion (this is the nestle default, so doesn&amp;#39;t need to be set)&lt;/span&gt;
 
-&lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nestle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loglikelihood_nestle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;prior_transform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ndims&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;npoints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nlive&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nestle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loglikelihood_nestle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;prior_transform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ndims&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;npoints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nlive&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dlogz&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="n"&gt;logZnestle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logz&lt;/span&gt;                         &lt;span class="c1"&gt;# value of logZ&lt;/span&gt;
 &lt;span class="n"&gt;infogainnestle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;                        &lt;span class="c1"&gt;# value of the information gain in nats&lt;/span&gt;
@@ -1340,7 +1638,7 @@ on the straight line parameters $m$ and $c$.&lt;/p&gt;
 &lt;p&gt;to enter an interactive container, and then within the contain run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python test_emcee.py
 &lt;/pre&gt;&lt;/div&gt;</content><category term="emcee"></category><category term="MCMC"></category></entry><entry><title>Samplers, samplers, everywhere...</title><link href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/" rel="alternate"></link><published>2018-02-01T10:00:00+00:00</published><updated>2018-02-01T10:00:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-01:/samplers-demo/pages/samplers-samplers-everywhere/</id><summary type="html">
-&lt;p&gt;This notebook aims to provide a basic example of how to run a variety of &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;MCMC&lt;/a&gt; and &lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;nested sampling&lt;/a&gt; codes in &lt;a href="https://www.python.org/"&gt;Python&lt;/a&gt;. It won't go into detail about MCMC methods in general, and assumes a bit of knowledge about them, nor will it discuss all the various bells-and-whistles that each sampler can use, but it will hopefully help people get started with writing code to use a sampler using an understandable (albeit "toy") example. A very nice, quite similar, article on this topic by &lt;a href="http://vanderplas.com/"&gt;Jake VanderPlas&lt;/a&gt; can be found &lt;a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/"&gt;here&lt;/a&gt;. There are also very good &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/20A_MCMC.html"&gt;online notes&lt;/a&gt; from the &lt;em&gt;Computational Statistics and Statistical Computing&lt;/em&gt; course at &lt;a href="https://www.duke.edu/"&gt;Duke University&lt;/a&gt; by &lt;a href="https://genome.duke.edu/directory/cbb-faculty/cliburn-chan-phd"&gt;Cliburn Chan&lt;/a&gt; &amp; &lt;a href="https://scholars.duke.edu/person/janice.mccarthy"&gt;Janice McCarthy&lt;/a&gt;, covering some of this material (including &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19A_PyMC3.html"&gt;PyMC3&lt;/a&gt; and &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19B_Pystan.html#estimating-parameters-of-a-linear-regression-model"&gt;PyStan&lt;/a&gt; examples that are very similar to what is covered here). Section 2 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt; gives a nice summary of the advantages and disadvantages of some of the algorithms shown here.&lt;/p&gt;
+&lt;p&gt;This notebook aims to provide a basic example of how to run a variety of &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;MCMC&lt;/a&gt; and &lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;nested sampling&lt;/a&gt; codes in &lt;a href="https://www.python.org/"&gt;Python&lt;/a&gt;. It won't go into detail about MCMC methods in general, and assumes a bit of knowledge about them, nor will it discuss all the various bells-and-whistles that each sampler can use, but it will hopefully help people get started with writing a sampler code using an understandable (albeit "toy") example. A very nice, quite similar, article on this topic by &lt;a href="http://vanderplas.com/"&gt;Jake VanderPlas&lt;/a&gt; can be found &lt;a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/"&gt;here&lt;/a&gt;. There are also very good &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/20A_MCMC.html"&gt;online notes&lt;/a&gt; from the &lt;em&gt;Computational Statistics and Statistical Computing&lt;/em&gt; course at &lt;a href="https://www.duke.edu/"&gt;Duke University&lt;/a&gt; by &lt;a href="https://genome.duke.edu/directory/cbb-faculty/cliburn-chan-phd"&gt;Cliburn Chan&lt;/a&gt; &amp; &lt;a href="https://scholars.duke.edu/person/janice.mccarthy"&gt;Janice McCarthy&lt;/a&gt;, covering some of this material (including &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19A_PyMC3.html"&gt;PyMC3&lt;/a&gt; and &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19B_Pystan.html#estimating-parameters-of-a-linear-regression-model"&gt;PyStan&lt;/a&gt; examples that are very similar to what is covered here). Section 2 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt; gives a nice summary of the advantages and disadvantages of some of the algorithms shown here.&lt;/p&gt;
 </summary><content type="html">&lt;style type="text/css"&gt;/*!
 *
 * IPython notebook
@@ -2318,65 +2616,58 @@ h6:hover .anchor-link {
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 
-&lt;p&gt;This notebook aims to provide a basic example of how to run a variety of &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;MCMC&lt;/a&gt; and &lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;nested sampling&lt;/a&gt; codes in &lt;a href="https://www.python.org/"&gt;Python&lt;/a&gt;. It won't go into detail about MCMC methods in general, and assumes a bit of knowledge about them, nor will it discuss all the various bells-and-whistles that each sampler can use, but it will hopefully help people get started with writing code to use a sampler using an understandable (albeit "toy") example. A very nice, quite similar, article on this topic by &lt;a href="http://vanderplas.com/"&gt;Jake VanderPlas&lt;/a&gt; can be found &lt;a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/"&gt;here&lt;/a&gt;. There are also very good &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/20A_MCMC.html"&gt;online notes&lt;/a&gt; from the &lt;em&gt;Computational Statistics and Statistical Computing&lt;/em&gt; course at &lt;a href="https://www.duke.edu/"&gt;Duke University&lt;/a&gt; by &lt;a href="https://genome.duke.edu/directory/cbb-faculty/cliburn-chan-phd"&gt;Cliburn Chan&lt;/a&gt; &amp; &lt;a href="https://scholars.duke.edu/person/janice.mccarthy"&gt;Janice McCarthy&lt;/a&gt;, covering some of this material (including &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19A_PyMC3.html"&gt;PyMC3&lt;/a&gt; and &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19B_Pystan.html#estimating-parameters-of-a-linear-regression-model"&gt;PyStan&lt;/a&gt; examples that are very similar to what is covered here). Section 2 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt; gives a nice summary of the advantages and disadvantages of some of the algorithms shown here.&lt;/p&gt;
+&lt;p&gt;This notebook aims to provide a basic example of how to run a variety of &lt;a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo"&gt;MCMC&lt;/a&gt; and &lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;nested sampling&lt;/a&gt; codes in &lt;a href="https://www.python.org/"&gt;Python&lt;/a&gt;. It won't go into detail about MCMC methods in general, and assumes a bit of knowledge about them, nor will it discuss all the various bells-and-whistles that each sampler can use, but it will hopefully help people get started with writing a sampler code using an understandable (albeit "toy") example. A very nice, quite similar, article on this topic by &lt;a href="http://vanderplas.com/"&gt;Jake VanderPlas&lt;/a&gt; can be found &lt;a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/"&gt;here&lt;/a&gt;. There are also very good &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/20A_MCMC.html"&gt;online notes&lt;/a&gt; from the &lt;em&gt;Computational Statistics and Statistical Computing&lt;/em&gt; course at &lt;a href="https://www.duke.edu/"&gt;Duke University&lt;/a&gt; by &lt;a href="https://genome.duke.edu/directory/cbb-faculty/cliburn-chan-phd"&gt;Cliburn Chan&lt;/a&gt; &amp; &lt;a href="https://scholars.duke.edu/person/janice.mccarthy"&gt;Janice McCarthy&lt;/a&gt;, covering some of this material (including &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19A_PyMC3.html"&gt;PyMC3&lt;/a&gt; and &lt;a href="http://people.duke.edu/~ccc14/sta-663-2017/19B_Pystan.html#estimating-parameters-of-a-linear-regression-model"&gt;PyStan&lt;/a&gt; examples that are very similar to what is covered here). Section 2 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt; gives a nice summary of the advantages and disadvantages of some of the algorithms shown here.&lt;/p&gt;
 
-&lt;p&gt;You can jump straight to the examples for the different esamplers with the links below:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="#MCMC-samplers"&gt;MCMC samplers&lt;/a&gt;&lt;ol&gt;
+&lt;p&gt;You can jump straight to the examples for the different samplers with the links below:&lt;/p&gt;
+&lt;p&gt;&lt;a href="#MCMC-samplers"&gt;&lt;strong&gt;MCMC samplers&lt;/strong&gt;&lt;/a&gt;:&lt;/p&gt;
+&lt;ol&gt;
 &lt;li&gt;&lt;a href="#emcee"&gt;emcee&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#PyMC3"&gt;PyMC3&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#PyStan"&gt;PyStan&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#PyJAGS"&gt;PyJAGS&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href="#Nested-Sampling"&gt;Nested samplers&lt;/a&gt;&lt;ol&gt;
+&lt;p&gt;&lt;a href="#Nested-Sampling"&gt;&lt;strong&gt;Nested samplers&lt;/strong&gt;&lt;/a&gt;:&lt;/p&gt;
+&lt;ol&gt;
 &lt;li&gt;&lt;a href="#Nestle"&gt;Nestle&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#CPNest"&gt;CPNest&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#PyMultiNest"&gt;PyMultiNest&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#DNest4"&gt;DNest4&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#PyPolyChord"&gt;PyPolyChord&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="Background"&gt;Background&lt;a class="anchor-link" href="#Background"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;MCMC methods are often used in the context of Bayesian parameter estimation, e.g., you have a model, $y$, defined by a set of unknown parameters, ${\vec{\theta}}$, with certain prior probability distributions $p(\vec{\theta}|I)$, and you want to sample from the marginalised posterior probability distributions on those parameters given some data, $\mathbf{d}$, and a particular likelihood function, $p(\mathbf{d}|\vec{\theta},I)$, ($I$ is just a substitute for all our implicit assumptions that have gone into defining our model). From Bayes theorem we have the joint posterior on the whole set of parameters,&lt;/p&gt;
+&lt;h2 id="Background"&gt;Background&lt;a class="anchor-link" href="#Background"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;MCMC methods are most often used in the context of Bayesian parameter estimation, e.g., you have a model, $y$, defined by a set of unknown parameters, ${\vec{\theta}}$, with certain prior probability distributions $p(\vec{\theta}|I)$, and you want to sample from the marginalised posterior probability distributions on those parameters given some data, $\mathbf{d}$, and a particular &lt;a href="https://en.wikipedia.org/wiki/Likelihood_function"&gt;likelihood function&lt;/a&gt;, $p(\mathbf{d}|\vec{\theta},I)$, ($I$ is just a substitute for all our implicit assumptions that have gone into defining our model). From Bayes theorem we have the joint posterior on the whole set of parameters,&lt;/p&gt;
 $$
 p(\vec{\theta}|\mathbf{d},I) = \frac{p(\mathbf{d}|\vec{\theta},I) p(\vec{\theta}|I)}{p(\mathbf{d}|I)},
 $$&lt;p&gt;with marginalised posteriors on an individual parameter, say $\theta_1$, given by nested integrals over all other parameters,&lt;/p&gt;
 $$
 p(\theta_1|\mathbf{d},I) = \frac{1}{p(\mathbf{d}|I)}\int^{\forall \theta_i \in (\vec{\theta}\neq \theta_1)} p(\mathbf{d}|\vec{\theta},I) p(\vec{\theta}|I) {\rm d}{\theta_i},
-$$&lt;p&gt;($\forall \theta_i \in (\vec{\theta}\neq \theta_1)$ can be translated into "for all parameters $\theta_i$ in $\vec{\theta}$ that are not equal to $\theta_1$). $p(\mathbf{d}|I)$ is the marginalised likelihood, or &lt;em&gt;evidence&lt;/em&gt;,
-for the data, and is given by&lt;/p&gt;
+$$&lt;p&gt;($\forall \theta_i \in (\vec{\theta}\neq \theta_1)$ can be translated into "for all parameters $\theta_i$ in $\vec{\theta}$ that are not equal to $\theta_1$). $p(\mathbf{d}|I)$ is the &lt;a href="https://en.wikipedia.org/wiki/Marginal_likelihood"&gt;marginal likelihood&lt;/a&gt;, or &lt;em&gt;evidence&lt;/em&gt;, for the data, and is given by&lt;/p&gt;
 $$
 p(\mathbf{d}|I) = \int^{\forall \theta_i \in \vec{\theta}} p(\mathbf{d}|\vec{\theta},I) p(\vec{\theta}|I) {\rm d}{\theta_i},
-$$&lt;p&gt;which will be discussed below in relation to nested sampling.&lt;/p&gt;
-&lt;p&gt;This is the only context I (and probably many people in the physical sciences) have encountered using MCMC, and is the context I will use below.&lt;/p&gt;
-&lt;h2 id="Toy-model"&gt;Toy model&lt;a class="anchor-link" href="#Toy-model"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;The very basic example I'll use to demonstrate coding up the samplers is that of sampling from the posteriors of two parameters, $m$ and $c$, defining the model:&lt;/p&gt;
+$$&lt;p&gt;which will be discussed below in relation to &lt;a href="#Nested-Sampling"&gt;nested sampling&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is the only context I (and probably many people in the physical sciences) have encountered using MCMC methods, and is the context I will use below.&lt;/p&gt;
+&lt;h2 id="Toy-model"&gt;Toy model&lt;a class="anchor-link" href="#Toy-model"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;The very basic example that I will use to demonstrate coding up the samplers is that of sampling from the posteriors of two parameters, $m$ and $c$, defining the model:&lt;/p&gt;
 $$
 y(\mathbf{x};m,c) = m\mathbf{x} + c,
-$$&lt;p&gt;where $\mathbf{x}$ is a vector of values of $x$. This is basically fitting the gradient and $y$-intercept of a line, which should be fairly familiar as &lt;a href="https://en.wikipedia.org/wiki/Linear_regression"&gt;linear regression&lt;/a&gt;, and is obviously a solved problem (&lt;em&gt;assuming uniform priors!&lt;/em&gt;) using, e.g., &lt;a href="https://en.wikipedia.org/wiki/Linear_least_squares_%29mathematics%29"&gt;least squares fitting&lt;/a&gt;. But, this provides a simple example that can hopefully be extended to more realistics scenarios.&lt;/p&gt;
-&lt;p&gt;Our aim is to produce samples drawn from the marginalised posteriors&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;$p(m|\mathbf{d},I)$, and&lt;/li&gt;
-&lt;li&gt;$p(c|\mathbf{d},I)$.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The vector of data samples, $\mathbf{d}$, will consist of the model defined at a set of $M$ values, $\mathbf{x}$, with additive Gaussian noise, i.e., data point $i$ will be defined by&lt;/p&gt;
+$$&lt;p&gt;where $\mathbf{x}$ is a vector of values of $x$. This is basically fitting the gradient and $y$-intercept of a straight line, which should be fairly familiar as &lt;a href="https://en.wikipedia.org/wiki/Linear_regression"&gt;linear regression&lt;/a&gt;, and is obviously a solved problem (&lt;em&gt;assuming uniform priors!&lt;/em&gt;) using, e.g., &lt;a href="https://en.wikipedia.org/wiki/Linear_least_squares_%29mathematics%29"&gt;least squares fitting&lt;/a&gt;. But, this provides a simple example that can hopefully be extended to more realistics scenarios.&lt;/p&gt;
+&lt;p&gt;Our aim is to produce samples drawn from the marginalised posteriors $p(m|\mathbf{d},I)$, and $p(c|\mathbf{d},I)$.&lt;/p&gt;
+&lt;p&gt;The vector of data samples, $\mathbf{d}$, will consist of the model defined at a set of $M$ values, $\mathbf{x}$, with additive Gaussian noise of known standard deviation, i.e., data point $i$ will be defined by&lt;/p&gt;
 $$
 d_i = y(x_i;m,c) + n_i,
 $$&lt;p&gt;with&lt;/p&gt;
 $$
 n_i \sim N(0, \sigma_i),
 $$&lt;p&gt;which means the noise is drawn from a &lt;a href="https://en.wikipedia.org/wiki/Normal_distribution"&gt;Gaussian (or Normal) distribution&lt;/a&gt; of zero mean and standard deviation of $\sigma_i$.&lt;/p&gt;
-&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;I'll generally use the term  distribution &lt;a href="https://en.wikipedia.org/wiki/Normal%5fdistribution"&gt;Gaussian&lt;/a&gt;
+&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;I'll generally use the term &lt;a href="https://en.wikipedia.org/wiki/Normal%5fdistribution"&gt;Gaussian distribution&lt;/a&gt;
 rather than "Normal" distribution, as this it what I first heard it called. But, in many packages discussed below
 "Normal" is the more common word for the distribution.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id="Setting-the-likelihood"&gt;Setting the likelihood&lt;a class="anchor-link" href="#Setting-the-likelihood"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Given the above choice of noise a sensible (and fairly standard) likelihood for a data point given values of $m$ and $c$, will be given by a Gaussian distribution of the form&lt;/p&gt;
+&lt;h3 id="Setting-the-likelihood"&gt;Setting the likelihood&lt;a class="anchor-link" href="#Setting-the-likelihood"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;Given the above choice of noise, a sensible (and fairly standard) likelihood function for a data point given values of $m$ and $c$, will be given by a Gaussian distribution of the form&lt;/p&gt;
 $$
 p(d_i|m,c,I) = \left(2\pi\sigma_i^2\right)^{-1/2} \exp{\left(-\frac{\left[(d_i - y(x_i;m,c)\right]^2}{2\sigma_i^2} \right)},
 $$&lt;p&gt;and the joint likelihood for the whole dataset of $M$ points will be the product of the individual likelihoods&lt;/p&gt;
 $$
 p(\mathbf{d}|m,c,I) = \prod_{i=1}^M p(d_i|m,c,I) = \left(2\pi\right)^{-M/2}\left(\prod_{i=1}^M \sigma_i^{-1} \right) \exp{\left(-\sum_{i=1}^M\frac{\left[(d_i - y(x_i;m,c)\right]^2}{2\sigma_i^2} \right)}
-$$&lt;p&gt;When computing likelihoods numerical consideration mean that one almost always works with the natural logarithm of the likelihood, so we have&lt;/p&gt;
+$$&lt;p&gt;When computing likelihoods, numerical consideration mean that one almost always works with the natural logarithm of the likelihood, so we have&lt;/p&gt;
 $$
 \ln{p(\mathbf{d}|m,c,I)} \equiv \log{L} = -\frac{M}{2}\ln{(2\pi)} - \ln\left(\prod_{i=1}^M \sigma_i\right) - \sum_{i=1}^M\frac{\left[(d_i - y(x_i;m,c)\right]^2}{2\sigma_i^2}
 $$&lt;p&gt;For many cases we can ignore the terms that do not include our required parameters when sampling from their marginalised likelihoods (as they will just be constants), so often the log-likelihood can be set to be&lt;/p&gt;
@@ -2386,7 +2677,7 @@ $$&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;If wanting to 
 discussed later) and use it for &lt;a href="https://en.wikipedia.org/wiki/Bayes%5ffactor"&gt;model comparison&lt;/a&gt;, the constants 
 are required.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id="Setting-the-prior"&gt;Setting the prior&lt;a class="anchor-link" href="#Setting-the-prior"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;In addition to the likelihood we need to define priors on the parameters. To demonstrate a couple of different, and  reasonably common, priors, we'll use a uniform probability distribution for the prior on $m$ and a Gaussian probability distribution for the prior on $c$:&lt;/p&gt;
+&lt;h3 id="Setting-the-prior"&gt;Setting the prior&lt;a class="anchor-link" href="#Setting-the-prior"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;In addition to the likelihood, we need to define priors on the parameters. To demonstrate a couple of different, and reasonably common, priors, I'll use a uniform probability distribution for the prior on $m$ and a Gaussian probability distribution for the prior on $c$:&lt;/p&gt;
 $$
 p(m|\mu_m,\sigma_m,I) = \frac{1}{\sqrt{2\pi\sigma_m^2}}\exp{\left(-\frac{(m-\mu_m)^2}{2\sigma_m^2}\right)},
 $$&lt;p&gt;and&lt;/p&gt;
@@ -2402,17 +2693,17 @@ are just chosen for demonstration purposes to show how to code up two different 
 for this particular problem might be the one discussed &lt;a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/#The-Prior"&gt;here&lt;/a&gt;, which 
 could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/notebooks/getting%5fstarted.html#Arbitrary-distributions"&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id="Creating-the-data"&gt;Creating the data&lt;a class="anchor-link" href="#Creating-the-data"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;So, let's get started creating our data. We'll (arbitrarily) use:&lt;/p&gt;
+&lt;h3 id="Creating-the-data"&gt;Creating the data&lt;a class="anchor-link" href="#Creating-the-data"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;So, let's get started creating our data. I'll (arbitrarily) use:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;$m = 3.5$,&lt;/li&gt;
 &lt;li&gt;$c = 1.2$,&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;for our model and&lt;/p&gt;
+&lt;p&gt;for the model and&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;$\mathbf{x} \in [0, 10)$ in $M=100$ uniform steps ($[a,b)$ means &lt;a href="https://en.wikipedia.org/wiki/Bracket_%28mathematics%29#Intervals"&gt;inclusive of $a$, but exclusive of $b$&lt;/a&gt;),&lt;/li&gt;
 &lt;li&gt;$\sigma_i = \sigma = 0.5$ (i.e., each noise point is independent, but has the same standard deviation),&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;for our data.&lt;/p&gt;
+&lt;p&gt;for the data.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2466,7 +2757,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;span class="n"&gt;xmin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.&lt;/span&gt;
 &lt;span class="n"&gt;xmax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt;
 &lt;span class="n"&gt;stepsize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xmax&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;xmin&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;
-&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;10.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xmin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;xmax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stepsize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# define the model function&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;straight_line&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -2516,14 +2807,14 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h2 id="MCMC-samplers"&gt;MCMC samplers&lt;a class="anchor-link" href="#MCMC-samplers"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;First up we'll deal with MCMC samplers that are purely written in Python, then a couple that are wrappers to other libraries.&lt;/p&gt;
-&lt;h3 id="emcee"&gt;emcee&lt;a class="anchor-link" href="#emcee"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://dfm.io/emcee/current/"&gt;emcee&lt;/a&gt; (&lt;a href="https://arxiv.org/abs/1202.3665"&gt;Foreman-Mackey &lt;em&gt;et al&lt;/em&gt;, 2013&lt;/a&gt;) is a Python MCMC implementation that uses an affine invariant ensemble sampler (&lt;a href="https://msp.org/camcos/2010/5-1/p04.xhtml"&gt;Goodman &amp; Weare, 2010&lt;/a&gt;). This basically means that it doesn't just evolve a single point in the model parameter space, but evolves and ensemble of points, and steps in the evolution are tuned based on the current state of the ensemble, so the steps scale naturally (the &lt;em&gt;affine invariant&lt;/em&gt; bit) as the ensemble closes in on the posterior. This code has been &lt;a href="http://dfm.io/emcee/current/testimonials/"&gt;well used&lt;/a&gt; in the astrophysics community (and as an astrophysicisy myself I'm showing it as my first example!).&lt;/p&gt;
-&lt;p&gt;emcee is on &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; and is &lt;a href="http://dfm.io/emcee/current/user/install/#using-pip"&gt;installable&lt;/a&gt; via &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
+&lt;h2 id="MCMC-samplers"&gt;MCMC samplers&lt;a class="anchor-link" href="#MCMC-samplers"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;First up I'll deal with MCMC samplers that are purely written in Python, then a couple that are wrappers to other libraries.&lt;/p&gt;
+&lt;h3 id="emcee"&gt;emcee&lt;a class="anchor-link" href="#emcee"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://dfm.io/emcee/current/"&gt;emcee&lt;/a&gt; (&lt;a href="https://arxiv.org/abs/1202.3665"&gt;Foreman-Mackey &lt;em&gt;et al&lt;/em&gt;, 2013&lt;/a&gt;) is a Python MCMC implementation that uses an affine invariant ensemble sampler (&lt;a href="https://msp.org/camcos/2010/5-1/p04.xhtml"&gt;Goodman &amp; Weare, 2010&lt;/a&gt;). This basically means that it doesn't just evolve a single point in the model parameter space, but evolves and ensemble of points, and steps in the evolution are tuned based on the current state of the ensemble, so the steps scale naturally (the &lt;em&gt;affine invariant&lt;/em&gt; bit) as the ensemble closes in on the posterior. This code has been &lt;a href="http://dfm.io/emcee/current/testimonials/"&gt;well used&lt;/a&gt; in the astrophysics community (and as an astrophysicist myself I'm showing it as my first example!).&lt;/p&gt;
+&lt;p&gt;emcee is available on &lt;a href="https://pypi.org/"&gt;PyPI&lt;/a&gt; and is &lt;a href="http://dfm.io/emcee/current/user/install/#using-pip"&gt;installable&lt;/a&gt; via &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install emcee
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The sources code is available &lt;a href="https://github.com/dfm/emcee"&gt;here&lt;/a&gt;. The example here is very similar to the &lt;a href="http://dfm.io/emcee/current/user/line/"&gt;line model example&lt;/a&gt; given in the emcee documentation.&lt;/p&gt;
-&lt;p&gt;First up, we need to define the likelihood function, prior functions, and posterior probability function. These all need to be defined as the natural logarithms of the functions. All the functions take in a sample &lt;a href="https://docs.python.org/2/tutorial/datastructures.html#tuples-and-sequences"&gt;tuple&lt;/a&gt;, where a sample is vector $\vec{\theta}$ of parameter values, that can be unpacked to give the individual parameter values. Other arguments to the posterior function can be user defined.&lt;/p&gt;
-&lt;h4 id="Posterior"&gt;Posterior&lt;a class="anchor-link" href="#Posterior"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;For our example the posterior will take the following form:&lt;/p&gt;
+&lt;p&gt;The source code is available on GitHub &lt;a href="https://github.com/dfm/emcee"&gt;here&lt;/a&gt;. The example here is very similar to the &lt;a href="http://dfm.io/emcee/current/user/line/"&gt;line model example&lt;/a&gt; given in the emcee documentation.&lt;/p&gt;
+&lt;p&gt;First up, we need to define the likelihood function, prior functions, and posterior probability function. These all need to be defined as the natural logarithms of the functions. All the functions take in a sample &lt;a href="https://docs.python.org/2/tutorial/datastructures.html#tuples-and-sequences"&gt;tuple&lt;/a&gt; or list, where a sample is vector $\vec{\theta}$ of parameter values, that can be unpacked to give the individual parameter values. Other arguments to the posterior function can be user defined.&lt;/p&gt;
+&lt;h4 id="Posterior"&gt;Posterior&lt;a class="anchor-link" href="#Posterior"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;As we do not care about the marginal likelihood, the posterior will just be the product of the likelihood and prior, and will take the following form:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2647,7 +2938,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h4 id="MCMC-set-up"&gt;MCMC set up&lt;a class="anchor-link" href="#MCMC-set-up"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;We need decide on a initial number of ensemble points and initialise the samples, i.e., set starting points for them. The initial samples can be drawn from the prior distributions (in the &lt;code&gt;emcee&lt;/code&gt; documentation &lt;a href="http://dfm.io/emcee/current/user/line/"&gt;example&lt;/a&gt; it starts the opposite way round, i.e., with initial samples tightly packed around the true value). We'll choose 100 ensembles (the number of so-called &lt;em&gt;walkers&lt;/em&gt;) and initialise them with:&lt;/p&gt;
+&lt;h4 id="MCMC-set-up"&gt;MCMC set up&lt;a class="anchor-link" href="#MCMC-set-up"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;We need decide on a initial number of ensemble points and initialise the samples, i.e., set starting points for them. The initial samples can be drawn from the prior distributions (in the emcee documentation &lt;a href="http://dfm.io/emcee/current/user/line/"&gt;example&lt;/a&gt; it starts the opposite way round, i.e., with initial samples tightly packed around the true value). We'll choose 100 ensemble points (the number of so-called &lt;em&gt;walkers&lt;/em&gt;) and initialise them with:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2681,7 +2972,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Because our initial samples are drawn from the prior it can take time for them to converge on sampling from the posterior distributions that we want. To try and get around this we can run the sampler with a &lt;a href="https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_introbayes_sect007.htm"&gt;burn-in&lt;/a&gt; period (although see, e.g., &lt;a href="http://users.stat.umn.edu/~geyer/mcmc/burn.html"&gt;here&lt;/a&gt; or &lt;a href="https://www.johndcook.com/blog/2016/01/25/mcmc-burn-in/"&gt;here&lt;/a&gt; for some discussions about whether burn-ins are actually necessary), and we will ignore samples during this burn-in.&lt;/p&gt;
-&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;Alternative options could be to use some optimisation routine to try and find the posterior modes and start samples at that point, or use all samples, work out an autocorrelation length and thin the samples accordingly so they are uncorrelated, which gets rid of correlations during the initial convergence of the samples.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;Alternative options could be to use some optimisation routine to try and find the posterior mode and start samples at that point, or use all samples, work out an autocorrelation length and thin the samples accordingly so they are uncorrelated, which gets rid of correlations during the initial convergence of the samples.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;We'll choose a burn-in of 500 samples, and then run the chain for another 500 samples, which will give an output with $(500+500)\times 100 = 100000$ samples.&lt;/p&gt;
 &lt;/div&gt;
@@ -2703,7 +2994,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;The sampler first has to be initialise and told the required arguments, including any additional arguments for the posterior function:&lt;/p&gt;
+&lt;p&gt;The sampler first has to be initialised and told the required arguments, including any additional arguments for the posterior function:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2728,7 +3019,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now the sampler can be run, and the burn-in removed, with:&lt;/p&gt;
+&lt;p&gt;Now the sampler can be run, and the burn-in samples removed, with:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2767,7 +3058,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now plot the resulting posteriors using &lt;a href="http://corner.readthedocs.io/en/latest/"&gt;corner.py&lt;/a&gt; and a smoothed version using a Gaussian kernel density estimate.&lt;/p&gt;
+&lt;p&gt;Now we can plot the resulting posteriors using &lt;a href="http://corner.readthedocs.io/en/latest/"&gt;corner.py&lt;/a&gt;, and also show smoothed versions using a Gaussian &lt;a href="https://en.wikipedia.org/wiki/Kernel_density_estimation"&gt;kernel density estimate&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2840,7 +3131,8 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;p&gt;or with &lt;a href="https://conda.io/docs/index.html"&gt;Conda&lt;/a&gt; using:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;conda install -c conda-forge pymc3
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The majority of distributions that can be used for priors and likehood functions are &lt;a href="http://docs.pymc.io/api/distributions.html"&gt;predefined&lt;/a&gt; in PyMC3, so you do not have to worry about writing them yourself (although you can create your &lt;a href="http://docs.pymc.io/notebooks/getting_started.html#Arbitrary-distributions"&gt;own custom distribution&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;and the source is available on GitHub &lt;a href="https://github.com/pymc-devs/pymc3"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The majority of distributions that can be used for priors and likelihood functions are &lt;a href="http://docs.pymc.io/api/distributions.html"&gt;predefined&lt;/a&gt; in PyMC3, so you do not have to worry about writing them yourself (although you can create your &lt;a href="http://docs.pymc.io/notebooks/getting_started.html#Arbitrary-distributions"&gt;own custom distribution&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;To set up the model we can't just use the &lt;code&gt;straight_line()&lt;/code&gt; function defined above, but can do the following:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2896,7 +3188,7 @@ could be coded up for PyMC3 using the example &lt;a href="http://docs.pymc.io/no
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now we can perform the sampling. By default, for continuous variables like we have, the &lt;a href="http://docs.pymc.io/api/inference.html#step-methods"&gt;sampling step method&lt;/a&gt; will use &lt;a href="http://docs.pymc.io/api/inference.html#module-pymc3.step_methods.hmc.nuts"&gt;NUTS&lt;/a&gt;, but the method can be chosen manually. PyMC3 comes with a function for finding the &lt;a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"&gt;maximum a posteriori&lt;/a&gt; point (MAP), which we will use to find a starting point for the sampling. We'll run with 1000 samples, and tune (like the burn-in above) with 1000 samples (discarding these tuning samples):&lt;/p&gt;
+&lt;p&gt;Now we can perform the sampling. By default, for continuous variables like we have, the &lt;a href="http://docs.pymc.io/api/inference.html#step-methods"&gt;sampling step method&lt;/a&gt; will use &lt;a href="http://docs.pymc.io/api/inference.html#module-pymc3.step_methods.hmc.nuts"&gt;NUTS&lt;/a&gt;, but the method can be chosen manually. PyMC3 comes with a function for finding the &lt;a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"&gt;maximum a posteriori&lt;/a&gt; point (MAP), which we will use to find a starting point for the sampling. We'll run with 1000 samples, and tune (like the burn-in discussed &lt;a href="#MCMC-set-up"&gt;above&lt;/a&gt;) with 1000 samples (discarding these tuning samples):&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3013,7 +3305,7 @@ The number of effective samples is smaller than 25% for some parameters.
 &lt;span class="n"&gt;resdict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'mpymc3_sig'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;      &lt;span class="c1"&gt;# standard deviation of m samples&lt;/span&gt;
 &lt;span class="n"&gt;resdict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'cpymc3_mu'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;      &lt;span class="c1"&gt;# mean of c samples&lt;/span&gt;
 &lt;span class="n"&gt;resdict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'cpymc3_sig'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;      &lt;span class="c1"&gt;# standard deviation of c samples&lt;/span&gt;
-&lt;span class="n"&gt;resdict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'ccpymc3'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;corrcoef&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# correlation coefficient between parameters&lt;/span&gt;
+&lt;span class="n"&gt;resdict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'ccpymc3'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;corrcoef&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# correlation coefficient between parameters&lt;/span&gt;
 
 &lt;span class="n"&gt;plotposts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;samples_pymc3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -3036,7 +3328,7 @@ The number of effective samples is smaller than 25% for some parameters.
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="MCMC-wrapper-samplers"&gt;MCMC wrapper samplers&lt;a class="anchor-link" href="#MCMC-wrapper-samplers"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;There are other MCMC samplers that are not pure Python packages, but have a Python-based wrapper to a different library. With these you can't write pure Python model and probability functions, but instead have a create a code string that it then compiled and run using the underlying library functions. We will look at &lt;a href="http://pystan.readthedocs.io"&gt;PyStan&lt;/a&gt; and &lt;a href="https://pyjags.readthedocs.io"&gt;PyJAGS&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="MCMC-wrapper-samplers"&gt;MCMC wrapper samplers&lt;a class="anchor-link" href="#MCMC-wrapper-samplers"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;There are other MCMC samplers that are not pure Python packages, but have a Python-based wrapper to a different library. With these you can't write pure Python model and probability functions, but instead have a create a code string that is then compiled and run using the underlying library functions. We will look at &lt;a href="http://pystan.readthedocs.io"&gt;PyStan&lt;/a&gt; and &lt;a href="https://pyjags.readthedocs.io"&gt;PyJAGS&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3044,8 +3336,10 @@ The number of effective samples is smaller than 25% for some parameters.
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="PyStan"&gt;PyStan&lt;a class="anchor-link" href="#PyStan"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://pystan.readthedocs.io"&gt;PyStan&lt;/a&gt; is a Python interface to the popular &lt;a href="http://mc-stan.org/"&gt;Stan&lt;/a&gt; library. As with PyMC3, it uses the modern NUTS and Hamiltonain MC sampling methods. It can be &lt;a href="http://pystan.readthedocs.io/en/latest/getting_started.html#installation"&gt;installed&lt;/a&gt; using &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;pip install pystan&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="PyStan"&gt;PyStan&lt;a class="anchor-link" href="#PyStan"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://pystan.readthedocs.io"&gt;PyStan&lt;/a&gt; is a Python interface to the popular &lt;a href="http://mc-stan.org/"&gt;Stan&lt;/a&gt; library. As with &lt;a href="#PyMC3"&gt;PyMC3&lt;/a&gt;, it uses the modern NUTS and Hamiltonain MC sampling methods. It can be &lt;a href="http://pystan.readthedocs.io/en/latest/getting_started.html#installation"&gt;installed&lt;/a&gt; using &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pystan
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and the source code is available on GitHub &lt;a href="https://github.com/stan-dev/pystan"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To define the model and distributions you need to write a code string like this:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3218,13 +3512,13 @@ Time taken to run 'PyStan' is 0.16131234169006348 seconds
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="PyJAGS"&gt;PyJAGS&lt;a class="anchor-link" href="#PyJAGS"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="https://pyjags.readthedocs.io"&gt;PyJAGS&lt;/a&gt; is another wrapper to a non-Python library, in this case the &lt;a href="http://mcmc-jags.sourceforge.net/"&gt;JAGS&lt;/a&gt; (&lt;a href="http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/Plummer.pdf"&gt;Plummer, 2003&lt;/a&gt;). As with PyStan, you have to write a code script that is then compiled and run. To use PyJAGS you need to install JAGS, e.g. on a Debian-based system this can be done using:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;sudo apt-get install jags&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="PyJAGS"&gt;PyJAGS&lt;a class="anchor-link" href="#PyJAGS"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="https://pyjags.readthedocs.io"&gt;PyJAGS&lt;/a&gt; is another wrapper to a non-Python library, in this case the &lt;a href="http://mcmc-jags.sourceforge.net/"&gt;JAGS&lt;/a&gt; (&lt;a href="http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/Plummer.pdf"&gt;Plummer, 2003&lt;/a&gt;). As with PyStan, you have to write a code string that is then compiled and run. To use PyJAGS you need to install JAGS, e.g. on a Debian-based system this can be done using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install jags
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;and then &lt;a href="https://pyjags.readthedocs.io/en/latest/getting_started.html#installation"&gt;install&lt;/a&gt; PyJAGS using &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;pip install pyjags&lt;/code&gt;&lt;/p&gt;
-&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;I had some problems with PyJAGS due to &lt;a href="http://www.numpy.org/"&gt;numpy&lt;/a&gt; version issues, so to get it
-working I had to install it in a &lt;a href="https://virtualenv.pypa.io/en/stable/"&gt;Virtual Environment&lt;/a&gt;, with PyJAGS getting it's required numpy version.&lt;/em&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pyjags
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The source code for PyJAGS is available on GitHub &lt;a href="https://github.com/tmiasko/pyjags"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;A linear regression fitting example using PyJAGS is given &lt;a href="https://pyjags.readthedocs.io/en/latest/getting_started.html"&gt;here&lt;/a&gt;, on which this example is based.&lt;/p&gt;
 &lt;p&gt;We can define the model string using (note that in this model the Gaussian/Normal distribution takes the inverse variance as the second argument, rather than the standard deviation):&lt;/p&gt;
 &lt;/div&gt;
@@ -3393,14 +3687,14 @@ Time taken to run 'PyJAGS' is 0.15864157676696777 seconds
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h2 id="Nested-Sampling"&gt;Nested Sampling&lt;a class="anchor-link" href="#Nested-Sampling"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;Nested sampling&lt;/a&gt; (&lt;a href="https://projecteuclid.org/euclid.ba/1340370944"&gt;Skilling, 2006&lt;/a&gt;) is a method to numerically perform the integral required to evaluate the marginal likelihood of the data given a particular model. This is not a value that is produced by most standard MCMC methods, but is a value that is very useful if wanting to do &lt;a href="https://en.wikipedia.org/wiki/Bayes_factor"&gt;Bayesian model comparison&lt;/a&gt;. Above, we defined the marginal likelihood, or &lt;em&gt;evidence&lt;/em&gt;, as&lt;/p&gt;
+&lt;h2 id="Nested-Sampling"&gt;Nested Sampling&lt;a class="anchor-link" href="#Nested-Sampling"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm"&gt;Nested sampling&lt;/a&gt; (&lt;a href="https://projecteuclid.org/euclid.ba/1340370944"&gt;Skilling, 2006&lt;/a&gt;) is a method to numerically perform the integral required to evaluate the &lt;a href="https://en.wikipedia.org/wiki/Marginal_likelihood"&gt;marginal likelihood&lt;/a&gt; of the data given a particular model. This is not a value that is produced by most standard MCMC methods, but is a value that is very useful if wanting to do &lt;a href="https://en.wikipedia.org/wiki/Bayes_factor"&gt;Bayesian model comparison&lt;/a&gt;. Above, we defined the marginal likelihood, or &lt;em&gt;evidence&lt;/em&gt;, as&lt;/p&gt;
 $$
 p(\mathbf{d}|I) = \int^{\forall \theta_i \in \vec{\theta}} p(\mathbf{d}|\vec{\theta},I) p(\vec{\theta}|I) {\rm d}{\theta_i},
 $$&lt;p&gt;but, we can make this more explicit for a given hypothesis, or model, $H_j$, by stating:&lt;/p&gt;
 $$
 p(\mathbf{d}|H_j, I) \equiv Z = \int^{\forall \theta_i \in \vec{\theta}} p(\mathbf{d}|\vec{\theta}, H_j, I) p(\vec{\theta}|H_j,I) {\rm d}{\theta_i},
 $$&lt;p&gt;where previously the $H_j$ had been subsumed inside our implicit assumptions, $I$.&lt;/p&gt;
-&lt;p&gt;Nested sampling algorithms generally start by drawing a set of points (sometimes called &lt;em&gt;"live points"&lt;/em&gt;, or &lt;em&gt;"active points"&lt;/em&gt;) from the prior distribution. It relies on these points truely being independent draws from the prior, otherwise the resulting marginal likelihood value can be biased. The likelihood is evaluated at each point, and the smallest likelihood point if found. This points is then removed from the set of live points (and goes into the sum calculating the marginal likelihood integral) and a new point is drawn from the prior with the constraint that it has a likelihood larger than the just removed point. Drawing truely independent points from this constrained prior is the main tricky part of nested sampling (particularly when the number of parameters is not small), and a variety of methods (including MCMC methods) can be used.&lt;/p&gt;
+&lt;p&gt;Nested sampling algorithms generally start by drawing a set of points (sometimes called &lt;em&gt;"live points"&lt;/em&gt;, or &lt;em&gt;"active points"&lt;/em&gt;) from the prior distribution. It relies on these points truely being independent draws from the prior, otherwise the resulting marginal likelihood value can be biased. The likelihood is evaluated at each point, and the smallest likelihood point is found. This points is then removed from the set of live points (and goes into the sum calculating the marginal likelihood integral) and a new point is drawn from the prior with the constraint that it has a likelihood larger than the just removed point. Drawing truely independent points from this constrained prior is the main tricky part of nested sampling (particularly when the number of parameters is not small), and a variety of methods (including MCMC methods) can be used.&lt;/p&gt;
 &lt;p&gt;The uncertainty on the estimate of the natural logarithm marginal likelihood, $\ln{Z}$, can be found if the information gain (or &lt;a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence"&gt;Kullback-Leibler divergence&lt;/a&gt;), $h$, in going from the prior to the posterior is calculated. If $h$ (in &lt;a href="https://en.wikipedia.org/wiki/Nat_%28unit%29"&gt;nats&lt;/a&gt;) is available then the uncertainty is (&lt;a href="https://projecteuclid.org/euclid.ba/1340370944"&gt;Skilling, 2006&lt;/a&gt;):&lt;/p&gt;
 $$
 \sqrt{\frac{h}{N_{\rm live}}},
@@ -3408,7 +3702,7 @@ $$&lt;p&gt;where $N_{\rm live}$ is the number of live points used.&lt;/p&gt;
 &lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;This is the statistical uncertainty on the value, but if there are any biases due to the sampling not being independent draws from the prior then there can be systematic uncertainties too.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;As well as producing a value for the marginal likelihood, a by-product of the nested sampling algorithm to to produce a set of samples that can be re-sampled from to produce samples drawn from the posterior distribution.&lt;/p&gt;
-&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;MCMC methods can be used to estimate the marginal likelihood, e.g. &lt;code&gt;emcee&lt;/code&gt; can be run with a &lt;a href="http://dfm.io/emcee/current/user/pt/"&gt;parallel tempering sampling method&lt;/a&gt; and compute the evidence using thermodynamic integration (e.g., &lt;a href="http://aip.scitation.org/doi/abs/10.1063/1.1751356"&gt;Goggans &amp; Chi, 2004&lt;/a&gt;), or potentially using Slice sampling with PyMC3.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;em&gt;MCMC methods can be used to estimate the marginal likelihood, e.g. &lt;code&gt;emcee&lt;/code&gt; can be run with a &lt;a href="http://dfm.io/emcee/current/user/pt/"&gt;parallel tempering sampling method&lt;/a&gt; and used to compute the evidence using thermodynamic integration (e.g., &lt;a href="http://aip.scitation.org/doi/abs/10.1063/1.1751356"&gt;Goggans &amp; Chi, 2004&lt;/a&gt;), or potentially using Slice sampling with PyMC3.&lt;/em&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;As with MCMC, there are various codes available to perform the nested sampling algorithm. We will again look at pure Python implementations and some that are wrappers to other libraries.&lt;/p&gt;
 &lt;/div&gt;
@@ -3418,9 +3712,12 @@ $$&lt;p&gt;where $N_{\rm live}$ is the number of live points used.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="Nestle"&gt;Nestle&lt;a class="anchor-link" href="#Nestle"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://kylebarbary.com/nestle/"&gt;Nestle&lt;/a&gt; is a pure Python nested sampling algorithm. It has three options for the method with which it draws new samples: &lt;a href="http://kylebarbary.com/nestle/#mcmc-exploration-method-classic"&gt;"classic"&lt;/a&gt;, &lt;a href="http://kylebarbary.com/nestle/#single-ellipsoid-method-single"&gt;"single ellipsoid"&lt;/a&gt;, and &lt;a href="http://kylebarbary.com/nestle/#multiple-ellipsoids-method-multi"&gt;"multiple ellipsoids&lt;/a&gt;. In this example we'll make use of the last of these. This uses the MultiNest method (also see &lt;a href="#PyMultiNest"&gt;PyMultiNest below&lt;/a&gt;) (&lt;a href="https://arxiv.org/abs/0809.3437"&gt;Feroz &lt;em&gt;et al&lt;/em&gt;, 2009&lt;/a&gt;) in which the current live points are clustered (however, clustering is not re-done at every iteration of the algorithm), ellipsoids completely bounding each cluster are found, an ellipsoid is randomly chosen with a probability proportional to their volume, and a new sample is drawn uniformly from it.&lt;/p&gt;
-&lt;p&gt;Nestle is available on PyPI and installable using &lt;code&gt;pip&lt;/code&gt; with: &lt;code&gt;pip install nestle&lt;/code&gt;. The source code is available &lt;a href="https://github.com/kbarbary/nestle"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The set up of likelihood functions is quite similar to that for &lt;a href="#emcee"&gt;&lt;code&gt;emcee&lt;/code&gt;&lt;/a&gt;, but the prior that is used is a unit hypercube (an $n$-dimensional cube with all sides equal to one), so parameters must be mapped into this space. This is simple for uniform priors, but requires a &lt;a href="https://en.wikipedia.org/wiki/Probability_density_function#Dependent_variables_and_change_of_variables"&gt;re-parameterisation&lt;/a&gt; using a &lt;a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant"&gt;Jacobian&lt;/a&gt; for more complex priors (if possible).&lt;/p&gt;
+&lt;h3 id="Nestle"&gt;Nestle&lt;a class="anchor-link" href="#Nestle"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="http://kylebarbary.com/nestle/"&gt;Nestle&lt;/a&gt; is a pure Python nested sampling algorithm. It has three options for the method with which it draws new samples: &lt;a href="http://kylebarbary.com/nestle/#mcmc-exploration-method-classic"&gt;"classic"&lt;/a&gt;, &lt;a href="http://kylebarbary.com/nestle/#single-ellipsoid-method-single"&gt;"single ellipsoid"&lt;/a&gt;, and &lt;a href="http://kylebarbary.com/nestle/#multiple-ellipsoids-method-multi"&gt;"multiple ellipsoids&lt;/a&gt;. In this example we'll make use of the last of these. This uses the MultiNest method (also see &lt;a href="#PyMultiNest"&gt;PyMultiNest below&lt;/a&gt;) (&lt;a href="https://arxiv.org/abs/0809.3437"&gt;Feroz &lt;em&gt;et al&lt;/em&gt;, 2009&lt;/a&gt;) in which the current live points are clustered (however, clustering is not re-done at every iteration of the algorithm), ellipsoids completely bounding each cluster are found, an ellipsoid is randomly chosen with a probability proportional to its volume, and a new sample is drawn uniformly from it.&lt;/p&gt;
+&lt;p&gt;Nestle is available on PyPI and installable using &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install nestle
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The source code is available on GitHub &lt;a href="https://github.com/kbarbary/nestle"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The set up of likelihood functions is quite similar to that for &lt;a href="#emcee"&gt;emcee&lt;/a&gt;, but the prior that is used is a unit hypercube (an $n$-dimensional cube with all sides equal to one), so parameters must be mapped into this space. This is simple for uniform priors, but requires a &lt;a href="https://en.wikipedia.org/wiki/Probability_density_function#Dependent_variables_and_change_of_variables"&gt;re-parameterisation&lt;/a&gt; using a &lt;a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant"&gt;Jacobian&lt;/a&gt; for more complex priors (if possible).&lt;/p&gt;
 &lt;p&gt;For our Gaussian prior on $m$ we can't analytically re-parameterise it for a unit hypercube, however we can use &lt;a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling"&gt;inverse transform sampling&lt;/a&gt; to take samples from a uniform range between 0 and 1, and convert them back to a Gaussian, e.g.&lt;/p&gt;
 $$
 m = \mu_m + \sqrt{2}\sigma_m {\rm erf}^{-1}\left(2c - 1\right),
@@ -3471,7 +3768,7 @@ $$&lt;p&gt;where $c \sim {\rm Uniform}(0,1)$ and ${\rm erf}^{-1}$ is the &lt;a h
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h4 id="Setting-the-likelihood-function"&gt;Setting the likelihood function&lt;a class="anchor-link" href="#Setting-the-likelihood-function"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;This is similar to setting the likelihood function for &lt;a href="#Likelihood"&gt;&lt;code&gt;emcee&lt;/code&gt;&lt;/a&gt; except, as we're calculating the marginal likelihood, we will keep the normalisation constants. As before, we work with the natural logarithm of the likelihood function. The function can only take in a tuple variable containing the parameter values, so any additional required values must be hard coded, or set as global variables.&lt;/p&gt;
+&lt;h4 id="Setting-the-likelihood-function"&gt;Setting the likelihood function&lt;a class="anchor-link" href="#Setting-the-likelihood-function"&gt;Â¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;This is similar to setting the likelihood function for &lt;a href="#Likelihood"&gt;emcee&lt;/a&gt; except, as we're calculating the marginal likelihood, we will keep the normalisation constants. As before, we work with the natural logarithm of the likelihood function. The function can only take in a tuple variable containing the parameter values, so any additional required values must be hard coded, or set as global variables.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3507,8 +3804,8 @@ $$&lt;p&gt;where $c \sim {\rm Uniform}(0,1)$ and ${\rm erf}^{-1}$ is the &lt;a h
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now run the sampler. We'll use 1024 live/active points (there's nothing special about this number, and powers of two are not required). The more live points you use the longer the code will take to run, but the uncertainty on the final marginal likelihood value will decrease with greater numbers of live points.&lt;/p&gt;
-&lt;p&gt;Unlike with MCMCs where you give it a number of iterations to run and after that point it stops, nested sampling needs to be supplied with a &lt;a href="http://kylebarbary.com/nestle/stopping.html"&gt;stopping criterion&lt;/a&gt; at which point it will terminate. One common &lt;a href="http://kylebarbary.com/nestle/stopping.html#estimated-remaining-evidence"&gt;criterion&lt;/a&gt; is based on the ratio between an estimate of the total evidence and the current calculated evidence value. Once this value gets below some set value the algorithm will terminate.&lt;/p&gt;
+&lt;p&gt;Now you can run the sampler. We'll use 1024 live/active points (there's nothing special about this number, and powers of two are not required). The more live points you use the longer the code will take to run, but the uncertainty on the final marginal likelihood value will decrease with greater numbers of live points.&lt;/p&gt;
+&lt;p&gt;Unlike with MCMCs, where you give it a number of iterations to run and after that point it stops, nested sampling needs to be supplied with a &lt;a href="http://kylebarbary.com/nestle/stopping.html"&gt;stopping criterion&lt;/a&gt; at which point it will terminate. One common &lt;a href="http://kylebarbary.com/nestle/stopping.html#estimated-remaining-evidence"&gt;criterion&lt;/a&gt; is based on the ratio between an estimate of the total evidence and the current calculated evidence value. Once this value gets below some set value the algorithm will terminate.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3526,7 +3823,7 @@ $$&lt;p&gt;where $c \sim {\rm Uniform}(0,1)$ and ${\rm erf}^{-1}$ is the &lt;a h
 &lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;         &lt;span class="c1"&gt;# the stopping criterion (this is the nestle default, so doesn't need to be set)&lt;/span&gt;
 
 &lt;span class="n"&gt;t0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nestle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loglikelihood_nestle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;prior_transform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ndims&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;npoints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nlive&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nestle&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loglikelihood_nestle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;prior_transform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ndims&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;npoints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nlive&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dlogz&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;t1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
 &lt;span class="n"&gt;timenestle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -3620,7 +3917,7 @@ h: 10.573
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;As mentioned above the samples output by nested sampling are not drawn from the posterior, and as such need to be resampled from using certain weights. These weights are output by Nestle in the results. We can get posterior samples with the following:&lt;/p&gt;
+&lt;p&gt;As mentioned above, the samples output by nested sampling are not drawn from the posterior, and as such need to be resampled from using certain weights. These weights are output by Nestle in the results. We can get posterior samples with the following:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3699,12 +3996,12 @@ h: 10.573
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="CPNest"&gt;CPNest&lt;a class="anchor-link" href="#CPNest"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="https://johnveitch.github.io/cpnest/"&gt;CPNest&lt;/a&gt; (&lt;a href="http://doi.org/10.5281/zenodo.835874"&gt;Veitch &amp; del Pozzo, 2017&lt;/a&gt;) is another pure Python nested sampling algorithm. To perform the sampling from the restricted prior it uses a &lt;a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm"&gt;Metropolis-Hastings&lt;/a&gt; based MCMC, with sample proposal distributions that use a combination of the affine invarient ensemble methods described for &lt;a href="#emcee"&gt;&lt;code&gt;emcee&lt;/code&gt;&lt;/a&gt; (&lt;a href="https://msp.org/camcos/2010/5-1/p04.xhtml"&gt;Goodman &amp; Weare, 2010&lt;/a&gt;), &lt;a href="https://en.wikipedia.org/wiki/Differential_evolution"&gt;differential evolution&lt;/a&gt;, or jumps based on the eigenvectors of the covariance matrix of live points.&lt;/p&gt;
+&lt;h3 id="CPNest"&gt;CPNest&lt;a class="anchor-link" href="#CPNest"&gt;Â¶&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;&lt;a href="https://johnveitch.github.io/cpnest/"&gt;CPNest&lt;/a&gt; (&lt;a href="http://doi.org/10.5281/zenodo.835874"&gt;Veitch &amp; del Pozzo, 2017&lt;/a&gt;) is another pure Python nested sampling algorithm. To perform the sampling from the restricted prior it uses a &lt;a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm"&gt;Metropolis-Hastings&lt;/a&gt; based MCMC, with sample proposal distributions that use a combination of the affine invarient ensemble methods described for &lt;a href="#emcee"&gt;emcee&lt;/a&gt; (&lt;a href="https://msp.org/camcos/2010/5-1/p04.xhtml"&gt;Goodman &amp; Weare, 2010&lt;/a&gt;), &lt;a href="https://en.wikipedia.org/wiki/Differential_evolution"&gt;differential evolution&lt;/a&gt;, or jumps based on the eigenvectors of the covariance matrix of live points.&lt;/p&gt;
 &lt;p&gt;CPNest is available on PyPI and can be installed using &lt;code&gt;pip&lt;/code&gt; with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install cpnest
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The source code is available &lt;a href="https://github.com/johnveitch/cpnest/"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;To run CPNest we have to define a class containing the likelihood and prior functions. CPNest also requires explicit bounds on all parameters from which it will uniformly draw an initial set of live points. Prior to running the nested sampling algorithm, it will run an MCMC using the prior as the target distribution to make sure the samples are drawn from the required prior.&lt;/p&gt;
+&lt;p&gt;The source code is available on GitHub &lt;a href="https://github.com/johnveitch/cpnest/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To run CPNest we have to define a &lt;a href="https://docs.python.org/3/tutorial/classes.html"&gt;class&lt;/a&gt; containing the likelihood and prior functions. CPNest also requires explicit bounds on all parameters from which it will uniformly draw an initial set of live points. Prior to running the nested sampling algorithm, it will run an MCMC using the prior as the target distribution to make sure the samples are drawn from the required prior.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3743,7 +4040,7 @@ h: 10.573
     &lt;span class="c1"&gt;# set the m bounds to be +/- 10sigma about the mean&lt;/span&gt;
     &lt;span class="n"&gt;mbounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
-    &lt;span class="c1"&gt;# NOTE: the bounds could instead be set through arguments pass to the __init__&lt;/span&gt;
+    &lt;span class="c1"&gt;# NOTE: the bounds could instead be set through arguments passed to the __init__&lt;/span&gt;
     &lt;span class="c1"&gt;# function for the class if wanted&lt;/span&gt;
     &lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mbounds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cbounds&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# upper and lower bounds on each parameter (required for the class)&lt;/span&gt;
 
@@ -4283,7 +4580,7 @@ python setup.py install
 &lt;p&gt;The &lt;code&gt;perturb()&lt;/code&gt; method also needs to calculate the natural logarithm of the &lt;a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm"&gt;Metropolis-Hastings ratio&lt;/a&gt; required to give the acceptance probability:&lt;/p&gt;
 $$
 H = \frac{p(\theta'|I)}{p(\theta|I)} \frac{g(\theta|\theta')}{g(\theta'|\theta)},
-$$&lt;p&gt;where the first ratio on the right-hand-side is the ratio of priors at the proposed point $\theta'$ and current point $\theta$, and the second ratio of the ratio of the proposal distributions. In our case the proposal distribution is symmetric, so its ratio is unity, and the ratio of prior depends on the Gaussian prior on $m$, but not on the uniform prior for $c$.&lt;/p&gt;
+$$&lt;p&gt;where the first ratio on the right-hand-side is the ratio of priors at the proposed point $\theta'$ and current point $\theta$, and the second ratio of the ratio of the proposal distributions. In our case the proposal distribution is symmetric, so its ratio is unity, and the ratio of the prior depends on the Gaussian prior on $m$, but not on the uniform prior for $c$.&lt;/p&gt;
 &lt;p&gt;Parameters cannot be passed to the class on initialisation, so things such as the data must be global variables.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -4374,7 +4671,7 @@ $$&lt;p&gt;where the first ratio on the right-hand-side is the ratio of priors a
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;We can now run the sampler. The values that are passed to the sampler are described in Section 7 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt;, but we'll stick with the defaults used in the &lt;a href="https://github.com/eggplantbren/DNest4/blob/master/python/examples/straightline/straightline.py"&gt;example code&lt;/a&gt;, except for the &lt;code&gt;num_per_step&lt;/code&gt; value which we decrease by a factor of four to speed things up a bit. Unlike with the other nested sampling algorithms we do not pass a tolerance for the stopping criterion, but just specify the number of levels and steps to perform. The &lt;code&gt;num_steps&lt;/code&gt; gives to total number of MCMC iterations, but if not set the code will run forever by default, until the process is killed by the user.&lt;/p&gt;
+&lt;p&gt;We can now run the sampler. The values that are passed to the sampler are described in Section 7 of &lt;a href="https://arxiv.org/abs/1606.03757"&gt;Brewer &amp; Foreman-Mackey, 2016&lt;/a&gt;, but we'll stick with the defaults used in the &lt;a href="https://github.com/eggplantbren/DNest4/blob/master/python/examples/straightline/straightline.py"&gt;example code&lt;/a&gt;. Unlike with the other nested sampling algorithms we do not pass a tolerance for the stopping criterion, but just specify the number of levels and steps to perform. The &lt;code&gt;num_steps&lt;/code&gt; gives to total number of MCMC iterations, but if not set the code will run forever by default, until the process is killed by the user.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -4601,10 +4898,10 @@ Effective sample size = 168.38366865297846
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;As before we'll use 1024 live points (the default is to use 25 times the dimensionality of the problem) and a stopping criterion of 0.5 (the default value is 0.001). The current version of PyPolyChord will not directly return values such as the marginal likelihood or posterior samples within the Python environment. It instead just outputs these to files. The location of these files is set by passing the keyword arguments &lt;code&gt;base_dir&lt;/code&gt; (defaults to "&lt;code&gt;chains&lt;/code&gt;") and &lt;code&gt;file_root&lt;/code&gt; (defaults to "&lt;code&gt;test&lt;/code&gt;") to the algorithm, and with &lt;code&gt;&lt;root&gt; = &lt;base_dir&gt;/&lt;file_root&gt;&lt;/code&gt; the posterior samples can be found in &lt;code&gt;&lt;root&gt;.txt&lt;/code&gt; and the statistics found in &lt;code&gt;&lt;root&gt;.stats&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;You may find that the code produces a "Segmentation Fault" soon after it starts running. The PolyChord documentation says:&lt;/p&gt;
-&lt;blockquote&gt;&lt;p&gt;The slice sampling &amp; clustering steps use a recursive procedure. The default memory allocated to recursive 
-procedures is embarassingly small (to guard against memory leaks).&lt;/p&gt;
+&lt;p&gt;As before we'll use 1024 live points (the default is to use 25 times the dimensionality of the problem) and a stopping criterion of 0.5 (the default value is 0.001). The current version of PyPolyChord will return values of the marginal likelihood and its uncertainty from the &lt;code&gt;PyPolyChord&lt;/code&gt; object that runs the algorithm, but the class does not currently contain the posterior samples. It instead outputs these to files. The location of these files is set by setting the keyword arguments &lt;code&gt;base_dir&lt;/code&gt; (defaults to "&lt;code&gt;chains&lt;/code&gt;") and &lt;code&gt;file_root&lt;/code&gt; (defaults to "&lt;code&gt;test&lt;/code&gt;") in a &lt;code&gt;PolyChordSettings&lt;/code&gt; object. This sets &lt;code&gt;{root} = {base_dir}/{file_root}&lt;/code&gt;, and with this the posterior samples can be found in &lt;code&gt;{root}.txt&lt;/code&gt; and the other statistics found in &lt;code&gt;{root}.stats&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You may find that codes produce a "Segmentation Fault" soon after they start running. The PolyChord documentation says:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;"&lt;em&gt;The slice sampling &amp; clustering steps use a recursive procedure. The default memory allocated to recursive 
+procedures is embarassingly small (to guard against memory leaks).&lt;/em&gt;"&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;and the solution is to:&lt;/p&gt;
 &lt;blockquote&gt;&lt;p&gt;Try increasing the stack size:&lt;br/&gt;
@@ -5002,11 +5299,11 @@ OSX:      &lt;code&gt;ulimit -s hard&lt;/code&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h2 id="Running-this-notebook"&gt;Running this notebook&lt;a class="anchor-link" href="#Running-this-notebook"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;I have created a &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;Docker image&lt;/a&gt;, available on &lt;a href="https://hub.docker.com/"&gt;Docker Hub&lt;/a&gt;, that can be used to run this notebook in &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt;. To run it you can use &lt;a href="https://git-scm.com/"&gt;git&lt;/a&gt; download the notebook from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/notebooks/Samplers.ipynb"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="Running-this-notebook"&gt;Running this notebook&lt;a class="anchor-link" href="#Running-this-notebook"&gt;Â¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;I have created a &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;Docker image&lt;/a&gt;, available on &lt;a href="https://hub.docker.com/"&gt;Docker Hub&lt;/a&gt;, in which all the above samplers are installed, and that can be used to run this notebook in &lt;a href="http://jupyter.org/"&gt;Jupyter&lt;/a&gt;. You can download this notebook from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/notebooks/Samplers.ipynb"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you have Docker installed you can then run the notebook with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run -it -v notebook_location:/home/jovyan/work -e &lt;span class="nv"&gt;NB_UID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1001&lt;/span&gt; --user root --rm -p &lt;span class="m"&gt;8888&lt;/span&gt;:8888 mattpitkin/samplers:jupyter
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;docker run -it -v &lt;span class="o"&gt;{&lt;/span&gt;notebook_location&lt;span class="o"&gt;}&lt;/span&gt;:/home/jovyan/work -e &lt;span class="nv"&gt;NB_UID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1001&lt;/span&gt; --user root --rm -p &lt;span class="m"&gt;8888&lt;/span&gt;:8888 mattpitkin/samplers:jupyter
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;where &lt;code&gt;notebook_location&lt;/code&gt; is replaced with the path containing the downloaded notebook. This will provide a link that can be pasted into your browser to show the notebook, and the &lt;code&gt;Samplers.ipynb&lt;/code&gt; file can be selected. By default notebook will open with a Python 3 kernel, but it can be switched to a Python 2 kernel.&lt;/p&gt;
+&lt;p&gt;where &lt;code&gt;{notebook_location}&lt;/code&gt; is replaced with the path containing the downloaded notebook. This will provide a link that can be pasted into your browser to show the notebook, and the &lt;code&gt;Samplers.ipynb&lt;/code&gt; file can be selected. By default the notebook will open with a Python 3 kernel, but it can be switched to a Python 2 kernel.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
