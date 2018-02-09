@@ -417,83 +417,63 @@ article .meta a.comments_btn:hover {
                 </div>
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation" id="theNavbar">
 		    <ul class="nav navbar-nav navbar-right">
-                            <li><a href="/samplers-demo/pages/about.html" title="About">About</a></li>
+                            <li><a href="/samplers-demo/pages/articles.html" title="Articles">Articles</a></li>
                     </ul>
                 </nav>
             </div>
         </header>
 
         <div id="wrap">
-<div class="container index">
 
-  <article>
-    <header>
-      <h2><a href="http://mattpitkin.github.io/samplers-demo/pages/emcee/">An example using emcee</a></h2>
-      <time datetime="" title="2018-02-08T16:16:00+00:00" pubdate>Thu 08 February 2018</time>
-    </header>
+<div class="container post">
+    <article>
+        <header class="about">
+          <h1>Samplers demo</h1>
+	  
+        <div class="article_content">
+            <p>This site aims gives a demonstration of nine different <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>
+and <a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">nested sampling</a> algorithms that are
+either written in Python, or have Python-wrapper implementations. The demostration is a simple toy
+model of estimating the posteriors on the parameters of a straight line in Gaussian noise. The
+samplers used are:</p>
+<h2>MCMC:</h2>
+<ol>
+<li><a href="http://dfm.io/emcee/current/">emcee</a></li>
+<li><a href="http://docs.pymc.io/">PyMC3</a></li>
+<li><a href="http://pystan.readthedocs.io/en/latest/">PyStan</a></li>
+<li><a href="https://pyjags.readthedocs.io/en/latest/">PyJAGS</a></li>
+</ol>
+<h2>Nested Sampling:</h2>
+<ol>
+<li><a href="http://kylebarbary.com/nestle/">Nestle</a></li>
+<li><a href="https://johnveitch.github.io/cpnest/">CPNest</a></li>
+<li><a href="https://johannesbuchner.github.io/PyMultiNest/">PyMultiNest</a></li>
+<li><a href="https://github.com/eggplantbren/DNest4">DNest4</a></li>
+<li><a href="https://ccpforge.cse.rl.ac.uk/gf/project/polychord/">PyPolyChord</a></li>
+</ol>
+<p>A page showing a demonstration and comparison of all the samplers on a fixed dataset can be found
+<a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">here</a>.</p>
+<p>Standalone example for each sampler will be coming soon, along with information on <a href="https://docs.docker.com/">Docker</a>
+images that can be used to run all the samplers mentioned above.</p>
+<h3>The author</h3>
+<p>My name is Matthew Pitkin and I'm an astrophysicist working on gravitational wave data analysis in
+the <a href="http://www.physics.gla.ac.uk/igr/">Institute for Gravitational Research</a> at the <a href="https://www.gla.ac.uk/">University of Glasgow</a>.</p>
+        </div>
 
-    <div class="article_content">
-      
-
-<p>Here we show a standalone example of using <a href="http://dfm.io/emcee/current/">emcee</a> to
-estimate the parameters of a straight line model in data with Gaussian noise. This
-data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
-from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
-script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_emcee.py">here</a>.
-
-    </div>
-
-    <div class="meta">
-      <div>
-        <a href="http://mattpitkin.github.io/samplers-demo/pages/emcee/" class="read_more">Read more &#8594;</a>
-      </div>
-
-      <div>
-            <a href="http://mattpitkin.github.io/samplers-demo/tag/emcee.html" class="tag">emcee</a>
-            <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
-      </div>
-
-    </div>
-
-  </article>
-  <div class="separator"></div>
-  <article>
-    <header>
-      <h2><a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">Samplers, samplers, everywhere...</a></h2>
-      <time datetime="" title="2018-02-01T10:00:00+00:00" pubdate>Thu 01 February 2018</time>
-    </header>
-
-    <div class="article_content">
-      
-<p>This notebook aims to provide a basic example of how to run a variety of <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a> and <a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">nested sampling</a> codes in <a href="https://www.python.org/">Python</a>. It won't go into detail about MCMC methods in general, and assumes a bit of knowledge about them, nor will it discuss all the various bells-and-whistles that each sampler can use, but it will hopefully help people get started with writing code to use a sampler using an understandable (albeit "toy") example. A very nice, quite similar, article on this topic by <a href="http://vanderplas.com/">Jake VanderPlas</a> can be found <a href="https://jakevdp.github.io/blog/2014/06/14/frequentism-and-bayesianism-4-bayesian-in-python/">here</a>. There are also very good <a href="http://people.duke.edu/~ccc14/sta-663-2017/20A_MCMC.html">online notes</a> from the <em>Computational Statistics and Statistical Computing</em> course at <a href="https://www.duke.edu/">Duke University</a> by <a href="https://genome.duke.edu/directory/cbb-faculty/cliburn-chan-phd">Cliburn Chan</a> & <a href="https://scholars.duke.edu/person/janice.mccarthy">Janice McCarthy</a>, covering some of this material (including <a href="http://people.duke.edu/~ccc14/sta-663-2017/19A_PyMC3.html">PyMC3</a> and <a href="http://people.duke.edu/~ccc14/sta-663-2017/19B_Pystan.html#estimating-parameters-of-a-linear-regression-model">PyStan</a> examples that are very similar to what is covered here). Section 2 of <a href="https://arxiv.org/abs/1606.03757">Brewer & Foreman-Mackey, 2016</a> gives a nice summary of the advantages and disadvantages of some of the algorithms shown here.</p>
-
-    </div>
-
-    <div class="meta">
-      <div>
-        <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/" class="read_more">Read more &#8594;</a>
-      </div>
-
-      <div>
-            <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
-            <a href="http://mattpitkin.github.io/samplers-demo/tag/nested-sampling.html" class="tag">nested sampling</a>
-      </div>
-
-    </div>
-
-  </article>
-  <div class="separator"></div>
-
-  <nav class="pagination row">
-    <div class="col-xs-6 left">
-    </div>
-    <div class="col-xs-6 right">
-    </div>
-  </nav>
-
-  </div>
-
+    </article>
 </div>
+
+<footer class="about">
+<div class="social-links">
+	    <ul>
+	      <li><a href="http://www.astro.gla.ac.uk/~matthew" rel="me">website</a></li>
+	      <li><a href="http://cosmiczoo.blogspot.com" rel="me">blog</a></li>
+	      <li><a class="nodec icon-twitter" href="http://twitter.com/matt_pitkin" rel="me"></a></li>
+	      <li><a class="nodec icon-github" href="http://github.com/mattpitkin" rel="me"></a></li>
+	      <li><a class="nodec icon-stackoverflow" href="https://stackoverflow.com/users/1862861/matt-pitkin" rel="me"></a></li>
+	    </ul>
+</div>
+</footer>
 
         </div>
 <!--
@@ -505,5 +485,23 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
       </p>
     </footer>
 -->
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-10008049-8']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-10008049-8');
+    ga('send', 'pageview');
+</script>
     </body>
 </html>
