@@ -16,7 +16,7 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
 &lt;/p&gt;
 &lt;h2&gt;Example code&lt;/h2&gt;
 &lt;figure class='code'&gt;
-&lt;figcaption&gt;&lt;span&gt;emcee test_emcee.py&lt;/span&gt; &lt;a href='/downloads/code/test_emcee.py'&gt;download&lt;/a&gt;&lt;/figcaption&gt;
+&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt; &lt;a href='/samplers-demo/downloads/code/test_emcee.py'&gt;download&lt;/a&gt;&lt;/figcaption&gt;
 
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python&lt;/span&gt;
 &lt;span class="c1"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
@@ -3852,7 +3852,7 @@ OSX:      &lt;code&gt;ulimit -s hard&lt;/code&gt;&lt;/p&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
     mathjaxscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
@@ -3869,7 +3869,6 @@ OSX:      &lt;code&gt;ulimit -s hard&lt;/code&gt;&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
-        " linebreaks: { automatic: true, width: '95% container' }, " +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
         "    } " +
         "}); ";
