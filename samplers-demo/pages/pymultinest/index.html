@@ -6,7 +6,7 @@
         <meta name="author" content="Matthew Pitkin">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <title>An example using emcee | Samplers Demo</title>
+        <title>An example using PyMultiNest | Samplers Demo</title>
 
 	<link rel="shortcut icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
@@ -427,148 +427,144 @@ article .meta a.comments_btn:hover {
 <div class="container post">
     <article>
         <header>
-            <h1>An example using emcee</h1>
-            <time datetime="article.date.isoformat()" pubdate>Thu 08 February 2018</time>
+            <h1>An example using PyMultiNest</h1>
+            <time datetime="article.date.isoformat()" pubdate>Fri 09 February 2018</time>
         </header>
 
         <div class="article_content">
             
 
-<p>Here we show a standalone example of using <a href="http://dfm.io/emcee/current/">emcee</a> to
+<p>Here we show a standalone example of using <a href="http://johannesbuchner.github.io/PyMultiNest/">PyMultiNest</a> to
 estimate the parameters of a straight line model in data with Gaussian noise. The
 data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
 from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
-script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_emcee.py">here</a>.
+script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_PyMultiNest.py">here</a>.
 </p>
 <h2>Example code</h2>
 <figure class='code'>
-<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_emcee.py'>download</a></figcaption>
+<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_PyMultiNest.py'>download</a></figcaption>
 
 <div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example of running emcee to fit the parameters of a straight line.</span>
+<span class="sd">Example of running PyMultiNest to fit the parameters of a straight line.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="c1"># import emcee</span>
-<span class="kn">import</span> <span class="nn">emcee</span>
+<span class="c1"># import PyMultiNest Solver class</span>
+<span class="kn">from</span> <span class="nn">pymultinest.solve</span> <span class="kn">import</span> <span class="n">Solver</span>
 
 <span class="c1"># import model and data</span>
 <span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="k">def</span> <span class="nf">logposterior</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="n">LN2PI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">LNSIGMA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+<span class="c1"># create Solver class</span>
+<span class="k">class</span> <span class="nc">StraightLineModelPyMultiNest</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The natural logarithm of the joint posterior.</span>
-<span class="sd">    </span>
+<span class="sd">    A simple straight line model, with a Gaussian likelihood.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        theta (tuple): a sample containing individual parameter values</span>
-<span class="sd">        data (list): the set of data/observations</span>
-<span class="sd">        sigma (float): the standard deviation of the data points</span>
-<span class="sd">        x (list): the abscissa values at which the data/model is defined</span>
+<span class="sd">        data (:class:`numpy.ndarray`): an array containing the observed data</span>
+<span class="sd">        abscissa (:class:`numpy.ndarray`): an array containing the points at which the data were taken</span>
+<span class="sd">        modelfunc (function): a function defining the model</span>
+<span class="sd">        sigma (float): the standard deviation of the noise in the data</span>
+<span class="sd">        **kwargs: keyword arguments for the run method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">lp</span> <span class="o">=</span> <span class="n">logprior</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="c1"># get the prior</span>
-    
-    <span class="c1"># if the prior is not finite return a probability of zero (log probability of -inf)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lp</span><span class="p">):</span>
-        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    
-    <span class="c1"># return the likeihood times the prior (log likelihood plus the log prior)</span>
-    <span class="k">return</span> <span class="n">lp</span> <span class="o">+</span> <span class="n">loglikelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
+    <span class="c1"># define the prior parameters</span>
+    <span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower range on c (the same as the uniform c prior lower bound)</span>
+    <span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper range on c (the same as the uniform c prior upper bound)</span>
 
-<span class="k">def</span> <span class="nf">loglikelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The natural logarithm of the joint likelihood.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        theta (tuple): a sample containing individual parameter values</span>
-<span class="sd">        data (list): the set of data/observations</span>
-<span class="sd">        sigma (float): the standard deviation of the data points</span>
-<span class="sd">        x (list): the abscissa values at which the data/model is defined</span>
-<span class="sd">    </span>
-<span class="sd">    Note:</span>
-<span class="sd">        We do not include the normalisation constants (as discussed above).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1"># unpack the model parameters from the tuple</span>
-    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">theta</span>
-    
-    <span class="c1"># evaluate the model (assumes that the straight_line model is defined as above)</span>
-    <span class="n">md</span> <span class="o">=</span> <span class="n">straight_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-    
-    <span class="c1"># return the log likelihood</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="n">md</span> <span class="o">-</span> <span class="n">data</span><span class="p">)</span><span class="o">/</span><span class="n">sigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of the Gaussian prior on m</span>
+    <span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of the Gaussian prior on m</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">abscissa</span><span class="p">,</span> <span class="n">modelfunc</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># set the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>         <span class="c1"># oberserved data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_abscissa</span> <span class="o">=</span> <span class="n">abscissa</span> <span class="c1"># points at which the observed data are taken</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sigma</span> <span class="o">=</span> <span class="n">sigma</span>       <span class="c1"># standard deviation(s) of the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logsigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span> <span class="c1"># log sigma here to save computations in the likelihood</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ndata</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>   <span class="c1"># number of data points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">modelfunc</span>   <span class="c1"># model function</span>
 
-<span class="k">def</span> <span class="nf">logprior</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The natural logarithm of the prior probability.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        theta (tuple): a sample containing individual parameter values</span>
-<span class="sd">    </span>
-<span class="sd">    Note:</span>
-<span class="sd">        We can ignore the normalisations of the prior here.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">lp</span> <span class="o">=</span> <span class="mf">0.</span>
-    
-    <span class="c1"># unpack the model parameters from the tuple</span>
-    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">theta</span>
-    
-    <span class="c1"># uniform prior on c</span>
-    <span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span> <span class="c1"># lower range of prior</span>
-    <span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>  <span class="c1"># upper range of prior</span>
-    
-    <span class="c1"># set prior to 1 (log prior to 0) if in the range and zero (-inf) outside the range </span>
-    <span class="n">lp</span> <span class="o">=</span> <span class="mf">0.</span> <span class="k">if</span> <span class="n">cmin</span> <span class="o">&lt;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="n">cmax</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    
-    <span class="c1"># Gaussian prior on m</span>
-    <span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of the Gaussian prior</span>
-    <span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of the Gaussian prior</span>
-    <span class="n">lp</span> <span class="o">-=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">m</span> <span class="o">-</span> <span class="n">mmu</span><span class="p">)</span><span class="o">/</span><span class="n">msigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-    
-    <span class="k">return</span> <span class="n">lp</span>
+        <span class="n">Solver</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">Prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cube</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The prior transform going from the unit hypercube to the true parameters. This function</span>
+<span class="sd">        has to be called &quot;Prior&quot;.</span>
 
-<span class="n">Nens</span> <span class="o">=</span> <span class="mi">100</span>   <span class="c1"># number of ensemble points</span>
+<span class="sd">        Args:</span>
+<span class="sd">            cube (:class:`numpy.ndarray`): an array of values drawn from the unit hypercube</span>
 
-<span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of the Gaussian prior</span>
-<span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of the Gaussian prior</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            :class:`numpy.ndarray`: an array of the transformed parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="n">mini</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mmu</span><span class="p">,</span> <span class="n">msigma</span><span class="p">,</span> <span class="n">Nens</span><span class="p">)</span> <span class="c1"># initial m points</span>
+        <span class="c1"># extract values</span>
+        <span class="n">mprime</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">cprime</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower range of prior</span>
-<span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper range of prior</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmu</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">msigma</span><span class="o">*</span><span class="n">ndtri</span><span class="p">(</span><span class="n">mprime</span><span class="p">)</span>      <span class="c1"># convert back to m</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">cprime</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmax</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">cmin</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmin</span>  <span class="c1"># convert back to c</span>
 
-<span class="n">cini</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span><span class="p">,</span> <span class="n">Nens</span><span class="p">)</span> <span class="c1"># initial c points</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
 
-<span class="n">inisamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mini</span><span class="p">,</span> <span class="n">cini</span><span class="p">])</span><span class="o">.</span><span class="n">T</span> <span class="c1"># initial samples</span>
+    <span class="k">def</span> <span class="nf">LogLikelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cube</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The log likelihood function. This function has to be called &quot;LogLikelihood&quot;.</span>
 
-<span class="n">ndims</span> <span class="o">=</span> <span class="n">inisamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># number of parameters/dimensions</span>
+<span class="sd">        Args:</span>
+<span class="sd">            cube (:class:`numpy.ndarray`): an array of parameter values.</span>
 
-<span class="n">Nburnin</span> <span class="o">=</span> <span class="mi">500</span>   <span class="c1"># number of burn-in samples</span>
-<span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">500</span>  <span class="c1"># number of final posterior samples</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float: the log likelihood value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="c1"># set additional args for the posterior (the data, the noise std. dev., and the abscissa)</span>
-<span class="n">argslist</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="c1"># extract parameters</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="c1"># set up the sampler</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">emcee</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="n">Nens</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">logposterior</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">argslist</span><span class="p">)</span>
+        <span class="c1"># calculate the model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-<span class="c1"># pass the initial samples and total number of samples required</span>
-<span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="n">inisamples</span><span class="p">,</span> <span class="n">Nsamples</span><span class="o">+</span><span class="n">Nburnin</span><span class="p">);</span>
+        <span class="c1"># normalisation</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_ndata</span><span class="o">*</span><span class="n">LN2PI</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ndata</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_logsigma</span>
 
-<span class="c1"># extract the samples (removing the burn-in)</span>
-<span class="n">postsamples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="n">Nburnin</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndims</span><span class="p">))</span>
+        <span class="c1"># chi-squared</span>
+        <span class="n">chisq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">-</span> <span class="n">model</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigma</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">norm</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">chisq</span>
+
+<span class="n">nlive</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c1"># number of live points</span>
+<span class="n">ndim</span> <span class="o">=</span> <span class="mi">2</span>     <span class="c1"># number of parameters</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.5</span>    <span class="c1"># stopping criterion</span>
+
+<span class="c1"># run the algorithm</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">StraightLineModelPyMultiNest</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">straight_line</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">n_dims</span><span class="o">=</span><span class="n">ndim</span><span class="p">,</span>
+                                        <span class="n">n_live_points</span><span class="o">=</span><span class="n">nlive</span><span class="p">,</span> <span class="n">evidence_tolerance</span><span class="o">=</span><span class="n">tol</span><span class="p">);</span>
+
+<span class="n">logZpymnest</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">logZ</span>        <span class="c1"># value of log Z</span>
+<span class="n">logZerrpymnest</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">logZerr</span>  <span class="c1"># estimate of the statistcal uncertainty on logZ</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is </span><span class="se">\u00B1</span><span class="s1"> {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZpymnest</span><span class="p">,</span> <span class="n">logZerrpymnest</span><span class="p">)))</span>
+
+<span class="n">mchain_pymnest</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># extract chain of m values</span>
+<span class="n">cchain_pymnest</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># extract chain if c values</span>
+
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mchain_pymnest</span><span class="p">,</span> <span class="n">cchain_pymnest</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">samples_pymnest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
@@ -578,18 +574,16 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-
 <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;emcee.png&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;PyMultiNest.png&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 </figure>
 
 <h2>Running the code</h2>
-<p>A description of installing emcee is given <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#emcee">here</a>. If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_emcee.py"><code>test_emcee.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
-<div class="highlight"><pre><span></span>python test_emcee.py
+<p>A description of installing PyMultiNest is given <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#PyMultiNest">here</a>. If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_PyMultiNest.py"><code>test_PyMultiNest.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
+<div class="highlight"><pre><span></span>python test_PyMultiNest.py
 </pre></div>
 
 
@@ -601,14 +595,14 @@ on the straight line parameters $m$ and $c$.</p>
 
 
 <p>to enter an interactive container, and then within the contain run:</p>
-<div class="highlight"><pre><span></span>python test_emcee.py
+<div class="highlight"><pre><span></span>python test_PyMultiNest.py
 </pre></div>
         </div>
 
         <div class="meta">
             <div>
-                    <a href="http://mattpitkin.github.io/samplers-demo/tag/emcee.html" class="tag">emcee</a>
-                    <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/pymultinest.html" class="tag">PyMultiNest</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/nested-sampling.html" class="tag">nested sampling</a>
             </div>
         </div>
     </article>
@@ -618,9 +612,9 @@ on the straight line parameters $m$ and $c$.</p>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
     <script type="text/javascript">
       var disqus_shortname = 'sampler-demos';
-      var disqus_identifier = '/pages/emcee/';
-      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/emcee/';
-      var disqus_title = 'An example using emcee';
+      var disqus_identifier = '/pages/pymultinest/';
+      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/pymultinest/';
+      var disqus_title = 'An example using PyMultiNest';
       (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
