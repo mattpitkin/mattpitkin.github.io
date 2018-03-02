@@ -459,7 +459,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="c1"># import DNest4</span>
-<span class="kn">from</span> <span class="nn">dnest4</span> <span class="kn">import</span> <span class="n">randh</span>
+<span class="kn">from</span> <span class="nn">dnest4</span> <span class="kn">import</span> <span class="n">randh</span><span class="p">,</span> <span class="n">wrap</span>
 <span class="kn">import</span> <span class="nn">dnest4</span>
 
 <span class="c1"># import model and data</span>
@@ -467,6 +467,13 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="n">LN2PI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 <span class="n">LNSIGMA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+
+<span class="c1"># define prior range values</span>
+<span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower range on c (the same as the uniform c prior lower bound)</span>
+<span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper range on c (the same as the uniform c prior upper bound)</span>
+
+<span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of the Gaussian prior on m</span>
+<span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of the Gaussian prior on m</span>
 
 <span class="c1"># Create model class</span>
 <span class="k">class</span> <span class="nc">DNest4Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -487,12 +494,6 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="sd">            :class:`np.ndarray`: a numpy array containing the parameter values.</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower range on c (the same as the uniform c prior lower bound)</span>
-        <span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper range on c (the same as the uniform c prior upper bound)</span>
-
-        <span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of the Gaussian prior on m</span>
-        <span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of the Gaussian prior on m</span>
 
         <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mmu</span><span class="p">,</span> <span class="n">msigma</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">cmin</span><span class="p">,</span>  <span class="n">cmax</span><span class="p">)</span>
@@ -519,10 +520,14 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
         <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># update H for Gaussian prior</span>
             <span class="n">logH</span> <span class="o">-=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">]</span><span class="o">-</span><span class="n">mmu</span><span class="p">)</span><span class="o">/</span><span class="n">msigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">10.</span><span class="o">*</span><span class="n">randh</span><span class="p">()</span> <span class="c1"># scale factor of 10, which is ~the prior width</span>
+        <span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span><span class="o">*</span><span class="n">randh</span><span class="p">()</span> <span class="c1"># scale factor of 1. (randh is a heavy-tailed distribution to occasionally sample distant values, although this isn&#39;t really required in this case)</span>
+
         <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># update H for Gaussian prior</span>
             <span class="n">logH</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">]</span><span class="o">-</span><span class="n">mmu</span><span class="p">)</span><span class="o">/</span><span class="n">msigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># wrap c value so that it stays within the prior range</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">which</span><span class="p">],</span> <span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">logH</span>
 
@@ -545,13 +550,8 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
                      <span class="n">num_per_step</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">thread_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_particles</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
 <span class="c1"># Do the sampling (one iteration here = one particle save)</span>
-<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gen</span><span class="p">):</span>
     <span class="k">pass</span>
-
-<span class="c1"># run the algorithm</span>
-<span class="n">solution</span> <span class="o">=</span> <span class="n">StraightLineModelPyMultiNest</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">straight_line</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">n_dims</span><span class="o">=</span><span class="n">ndim</span><span class="p">,</span>
-                                        <span class="n">n_live_points</span><span class="o">=</span><span class="n">nlive</span><span class="p">,</span> <span class="n">evidence_tolerance</span><span class="o">=</span><span class="n">tol</span><span class="p">);</span>
 
 <span class="c1"># Run the postprocessing to get marginal likelihood and generate posterior samples</span>
 <span class="n">logZdnest4</span><span class="p">,</span> <span class="n">infogaindnest4</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">dnest4</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">plot</span><span class="o">=</span><span class="bp">False</span><span class="p">);</span>

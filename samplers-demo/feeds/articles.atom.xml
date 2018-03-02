@@ -40,7 +40,7 @@ have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/
 &lt;span class="k"&gt;RUN&lt;/span&gt; apt-get update
 
 &lt;span class="c"&gt;# install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev&lt;/span&gt;
-&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng
+&lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng python-tk
 
 &lt;span class="c"&gt;# install light(ish) weight LaTeX&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; apt-get install -y --no-install-recommends texlive texlive-latex-extra
@@ -60,6 +60,9 @@ have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/
 
 &lt;span class="c"&gt;# Install numpy, scipy, matplotlib and corner&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org numpy scipy matplotlib corner
+
+&lt;span class="c"&gt;# Install IPython kernel&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org ipykernel
 
 &lt;span class="c"&gt;# Install samplers&lt;/span&gt;
 &lt;span class="c"&gt;# Install PyJAGS from PyPI&lt;/span&gt;
@@ -101,8 +104,17 @@ have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/
 &lt;span class="c"&gt;# Add getdist package for reading in PolyChord output&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org getdist
 
+&lt;span class="c"&gt;# Install UltraNest&lt;/span&gt;
+&lt;span class="c"&gt;# first install metric-learn and progressbar-latest, which are required by UltraNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/JohannesBuchner/UltraNest.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/UltraNest &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/usr/local
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/UltraNest/nested_sampling/clustering &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cp *.so /usr/local/lib/python2.7/dist-packages/nested_sampling/clustering
+
 &lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; PYTHONPATH /usr/local/lib/python2.7/dist-packages/nested_sampling&lt;/span&gt;
 
 &lt;span class="c"&gt;# change to new working directory&lt;/span&gt;
 &lt;span class="k"&gt;WORKDIR&lt;/span&gt;&lt;span class="s"&gt; /work&lt;/span&gt;
@@ -144,6 +156,9 @@ have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/
 &lt;span class="c"&gt;# Install numpy, scipy, matplotlib and corner&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org numpy scipy matplotlib corner
 
+&lt;span class="c"&gt;# Install IPython Kernel&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org ipykernel
+
 &lt;span class="c"&gt;# Install samplers&lt;/span&gt;
 &lt;span class="c"&gt;# Install PyJAGS from PyPI&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org pyjags
@@ -184,8 +199,17 @@ have downloaded the &lt;a href="http://mattpitkin.github.io/samplers-demo/pages/
 &lt;span class="c"&gt;# Add getdist package for reading in PolyChord output&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org getdist
 
+&lt;span class="c"&gt;# Install UltraNest&lt;/span&gt;
+&lt;span class="c"&gt;# first install metric-learn and progressbar-latest, which are required by UltraNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip3 install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/JohannesBuchner/UltraNest.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/UltraNest &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python3 setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/usr/local
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /samplers/UltraNest/nested_sampling/clustering &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cp *.so /usr/local/lib/python3.5/dist-packages/nested_sampling/clustering
+
 &lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
-&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering&lt;/span&gt;
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; PYTHONPATH /usr/local/lib/python3.5/dist-packages/nested_sampling&lt;/span&gt;
 
 &lt;span class="c"&gt;# update alternatives to python3 (generally not what you should do, but it shouldn&amp;#39;t be a problem in this container)&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; update-alternatives --install /usr/bin/python python /usr/bin/python3 &lt;span class="m"&gt;10&lt;/span&gt;
@@ -282,11 +306,22 @@ USER root
 &lt;span class="c"&gt;# Install getdist for PolyChord post-processing&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org getdist
 
+&lt;span class="c"&gt;# Install UltraNest&lt;/span&gt;
+&lt;span class="c"&gt;# first install metric-learn and progressbar-latest, which are required by UltraNest&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; pip install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git clone https://github.com/JohannesBuchner/UltraNest.git
+&lt;span class="k"&gt;RUN&lt;/span&gt; chown -R &lt;span class="nv"&gt;$NB_USER&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/UltraNest
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/UltraNest &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; python setup.py install --prefix&lt;span class="o"&gt;=&lt;/span&gt;/opt/conda
+&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;/UltraNest/nested_sampling/clustering &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cp *.so /opt/conda/lib/python3.6/site-packages/nested_sampling/clustering
+
+&lt;span class="k"&gt;ENV&lt;/span&gt;&lt;span class="s"&gt; PYTHONPATH /opt/conda/lib/python3.6/site-packages/nested_sampling&lt;/span&gt;
+
 &lt;span class="c"&gt;# switch back to non-root user&lt;/span&gt;
 USER &lt;span class="nv"&gt;$NB_USER&lt;/span&gt;
 
 &lt;span class="c"&gt;# add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)&lt;/span&gt;
-&lt;span class="k"&gt;RUN&lt;/span&gt; conda create -y -n py27 &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;.7 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; /bin/bash -c &lt;span class="s2"&gt;&amp;quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; ipython kernel install --user&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; conda create -y -n py27 &lt;span class="nv"&gt;python&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;.7 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; /bin/bash -c &lt;span class="s2"&gt;&amp;quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&amp;quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&amp;quot; &amp;gt; /opt/conda/envs/py27/etc/conda/activate.d&amp;quot;&lt;/span&gt;
 
 USER root
 &lt;span class="c"&gt;# add global environment variables&lt;/span&gt;
@@ -514,7 +549,7 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 
 &lt;span class="c1"&gt;# import DNest4&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dnest4&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;randh&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dnest4&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;randh&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;wrap&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dnest4&lt;/span&gt;
 
 &lt;span class="c1"&gt;# import model and data&lt;/span&gt;
@@ -522,6 +557,13 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
 
 &lt;span class="n"&gt;LN2PI&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;2.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pi&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;LNSIGMA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define prior range values&lt;/span&gt;
+&lt;span class="n"&gt;cmin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;  &lt;span class="c1"&gt;# lower range on c (the same as the uniform c prior lower bound)&lt;/span&gt;
+&lt;span class="n"&gt;cmax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt;   &lt;span class="c1"&gt;# upper range on c (the same as the uniform c prior upper bound)&lt;/span&gt;
+
+&lt;span class="n"&gt;mmu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.&lt;/span&gt;     &lt;span class="c1"&gt;# mean of the Gaussian prior on m&lt;/span&gt;
+&lt;span class="n"&gt;msigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt; &lt;span class="c1"&gt;# standard deviation of the Gaussian prior on m&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Create model class&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DNest4Model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -542,12 +584,6 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
 &lt;span class="sd"&gt;            :class:`np.ndarray`: a numpy array containing the parameter values.&lt;/span&gt;
 &lt;span class="sd"&gt;        &lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-
-        &lt;span class="n"&gt;cmin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;10.&lt;/span&gt;  &lt;span class="c1"&gt;# lower range on c (the same as the uniform c prior lower bound)&lt;/span&gt;
-        &lt;span class="n"&gt;cmax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt;   &lt;span class="c1"&gt;# upper range on c (the same as the uniform c prior upper bound)&lt;/span&gt;
-
-        &lt;span class="n"&gt;mmu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.&lt;/span&gt;     &lt;span class="c1"&gt;# mean of the Gaussian prior on m&lt;/span&gt;
-        &lt;span class="n"&gt;msigma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt; &lt;span class="c1"&gt;# standard deviation of the Gaussian prior on m&lt;/span&gt;
 
         &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;uniform&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="n"&gt;cmax&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -574,10 +610,14 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;which&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
             &lt;span class="c1"&gt;# update H for Gaussian prior&lt;/span&gt;
             &lt;span class="n"&gt;logH&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
-        &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mf"&gt;10.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;randh&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="c1"&gt;# scale factor of 10, which is ~the prior width&lt;/span&gt;
+        &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;randh&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="c1"&gt;# scale factor of 1. (randh is a heavy-tailed distribution to occasionally sample distant values, although this isn&amp;#39;t really required in this case)&lt;/span&gt;
+
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;which&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
             &lt;span class="c1"&gt;# update H for Gaussian prior&lt;/span&gt;
             &lt;span class="n"&gt;logH&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mmu&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;msigma&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;# wrap c value so that it stays within the prior range&lt;/span&gt;
+            &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;wrap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;which&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;cmin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cmax&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;logH&lt;/span&gt;
 
@@ -600,13 +640,8 @@ script shown below can be downloaded from &lt;a href="http://mattpitkin.github.i
                      &lt;span class="n"&gt;num_per_step&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;thread_steps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_particles&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lam&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Do the sampling (one iteration here = one particle save)&lt;/span&gt;
-&lt;span class="n"&gt;t0&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gen&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;pass&lt;/span&gt;
-
-&lt;span class="c1"&gt;# run the algorithm&lt;/span&gt;
-&lt;span class="n"&gt;solution&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StraightLineModelPyMultiNest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;straight_line&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_dims&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ndim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                                        &lt;span class="n"&gt;n_live_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nlive&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;evidence_tolerance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;tol&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Run the postprocessing to get marginal likelihood and generate posterior samples&lt;/span&gt;
 &lt;span class="n"&gt;logZdnest4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;infogaindnest4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dnest4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;postprocess&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;

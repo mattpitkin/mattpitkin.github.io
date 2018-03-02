@@ -469,7 +469,7 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> apt-get update
 
 <span class="c"># install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev</span>
-<span class="k">RUN</span> apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng
+<span class="k">RUN</span> apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng python-tk
 
 <span class="c"># install light(ish) weight LaTeX</span>
 <span class="k">RUN</span> apt-get install -y --no-install-recommends texlive texlive-latex-extra
@@ -489,6 +489,9 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 
 <span class="c"># Install numpy, scipy, matplotlib and corner</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org numpy scipy matplotlib corner
+
+<span class="c"># Install IPython kernel</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org ipykernel
 
 <span class="c"># Install samplers</span>
 <span class="c"># Install PyJAGS from PyPI</span>
@@ -530,8 +533,17 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Add getdist package for reading in PolyChord output</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org getdist
 
+<span class="c"># Install UltraNest</span>
+<span class="c"># first install metric-learn and progressbar-latest, which are required by UltraNest</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest <span class="o">&amp;&amp;</span> python setup.py install --prefix<span class="o">=</span>/usr/local
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python2.7/dist-packages/nested_sampling/clustering
+
 <span class="c"># add global environment variables</span>
-<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib</span>
+<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering</span>
+<span class="k">ENV</span><span class="s"> PYTHONPATH /usr/local/lib/python2.7/dist-packages/nested_sampling</span>
 
 <span class="c"># change to new working directory</span>
 <span class="k">WORKDIR</span><span class="s"> /work</span>
@@ -573,6 +585,9 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Install numpy, scipy, matplotlib and corner</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org numpy scipy matplotlib corner
 
+<span class="c"># Install IPython Kernel</span>
+<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org ipykernel
+
 <span class="c"># Install samplers</span>
 <span class="c"># Install PyJAGS from PyPI</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pyjags
@@ -613,8 +628,17 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Add getdist package for reading in PolyChord output</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org getdist
 
+<span class="c"># Install UltraNest</span>
+<span class="c"># first install metric-learn and progressbar-latest, which are required by UltraNest</span>
+<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest <span class="o">&amp;&amp;</span> python3 setup.py install --prefix<span class="o">=</span>/usr/local
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python3.5/dist-packages/nested_sampling/clustering
+
 <span class="c"># add global environment variables</span>
-<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib</span>
+<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering</span>
+<span class="k">ENV</span><span class="s"> PYTHONPATH /usr/local/lib/python3.5/dist-packages/nested_sampling</span>
 
 <span class="c"># update alternatives to python3 (generally not what you should do, but it shouldn&#39;t be a problem in this container)</span>
 <span class="k">RUN</span> update-alternatives --install /usr/bin/python python /usr/bin/python3 <span class="m">10</span>
@@ -711,11 +735,22 @@ USER root
 <span class="c"># Install getdist for PolyChord post-processing</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org getdist
 
+<span class="c"># Install UltraNest</span>
+<span class="c"># first install metric-learn and progressbar-latest, which are required by UltraNest</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org metric-learn progressbar-latest
+
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
+<span class="k">RUN</span> chown -R <span class="nv">$NB_USER</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest <span class="o">&amp;&amp;</span> python setup.py install --prefix<span class="o">=</span>/opt/conda
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /opt/conda/lib/python3.6/site-packages/nested_sampling/clustering
+
+<span class="k">ENV</span><span class="s"> PYTHONPATH /opt/conda/lib/python3.6/site-packages/nested_sampling</span>
+
 <span class="c"># switch back to non-root user</span>
 USER <span class="nv">$NB_USER</span>
 
 <span class="c"># add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)</span>
-<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; ipython kernel install --user&quot;</span>
+<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
 
 USER root
 <span class="c"># add global environment variables</span>
