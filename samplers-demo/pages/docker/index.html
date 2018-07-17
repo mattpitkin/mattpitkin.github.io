@@ -685,8 +685,8 @@ USER <span class="nv">$NB_USER</span>
 <span class="k">RUN</span> conda install -y scipy
 USER root
 
-<span class="c"># Install matplotlib and corner</span>
-<span class="k">RUN</span> pip install --trusted-host pypi.python.org matplotlib corner
+<span class="c"># Install matplotlib, corner and cpuinfo</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org matplotlib corner py-cpuinfo
 
 <span class="c"># Install samplers</span>
 <span class="c"># Install PyJAGS from PyPI</span>
@@ -698,8 +698,8 @@ USER root
 <span class="c"># Install PyStan</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org pystan
 
-<span class="c"># Install PyMC3</span>
-<span class="k">RUN</span> pip install --trusted-host pypi.python.org pymc3
+<span class="c"># Install PyMC3 (use pre-release version as version 3.4.1 has a bug)</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org --pre pymc3
 
 <span class="c"># Install Nestle</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org nestle
@@ -750,7 +750,7 @@ USER root
 USER <span class="nv">$NB_USER</span>
 
 <span class="c"># add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)</span>
-<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install emcee pymc3 pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
+<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install --pre pymc3; pip install emcee pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest py-cpuinfo; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
 
 USER root
 <span class="c"># add global environment variables</span>
