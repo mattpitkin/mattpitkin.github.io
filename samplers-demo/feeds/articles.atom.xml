@@ -158,16 +158,16 @@ on the straight line parameters $m$ and $c$.&lt;/p&gt;
 
 &lt;p&gt;to enter an interactive container, and then within the contain run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python test_UltraNest.py
-&lt;/pre&gt;&lt;/div&gt;</content><category term="UltraNest"></category><category term="nested sampling"></category></entry><entry><title>An example using edward</title><link href="http://mattpitkin.github.io/samplers-demo/pages/edward/" rel="alternate"></link><published>2018-03-29T16:19:00+01:00</published><updated>2018-03-29T16:19:00+01:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-03-29:/samplers-demo/pages/edward/</id><summary type="html">
+&lt;/pre&gt;&lt;/div&gt;</content><category term="UltraNest"></category><category term="nested sampling"></category></entry><entry><title>An example using Edward</title><link href="http://mattpitkin.github.io/samplers-demo/pages/Edward/" rel="alternate"></link><published>2018-03-29T16:19:00+01:00</published><updated>2018-03-29T16:19:00+01:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-03-29:/samplers-demo/pages/Edward/</id><summary type="html">
 
-&lt;p&gt;Here we show a standalone example of using &lt;a href="http://edwardlib.org/"&gt;edward&lt;/a&gt; to
+&lt;p&gt;Here we show a standalone example of using &lt;a href="http://edwardlib.org/"&gt;Edward&lt;/a&gt; to
 estimate the parameters of a straight line model in data with Gaussian noise. The
 data and model used in this example are defined in &lt;code&gt;createdata.py&lt;/code&gt;, which can be downloaded
 from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"&gt;here&lt;/a&gt;. The
 script shown below can be downloaded from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_edward.py"&gt;here&lt;/a&gt;.
 </summary><content type="html">
 
-&lt;p&gt;Here we show a standalone example of using &lt;a href="http://edwardlib.org/"&gt;edward&lt;/a&gt; to
+&lt;p&gt;Here we show a standalone example of using &lt;a href="http://edwardlib.org/"&gt;Edward&lt;/a&gt; to
 estimate the parameters of a straight line model in data with Gaussian noise. The
 data and model used in this example are defined in &lt;code&gt;createdata.py&lt;/code&gt;, which can be downloaded
 from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"&gt;here&lt;/a&gt;. The
@@ -260,7 +260,7 @@ on the straight line parameters $m$ and $c$.&lt;/p&gt;
 
 &lt;p&gt;to enter an interactive container, and then within the contain run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;python test_edward.py
-&lt;/pre&gt;&lt;/div&gt;</content><category term="edward"></category><category term="MCMC"></category></entry><entry><title>Docker images</title><link href="http://mattpitkin.github.io/samplers-demo/pages/docker/" rel="alternate"></link><published>2018-02-09T15:03:00+00:00</published><updated>2018-02-09T15:03:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-09:/samplers-demo/pages/docker/</id><summary type="html">&lt;p&gt;I have created &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; images, available on &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;DockerHub&lt;/a&gt;,
+&lt;/pre&gt;&lt;/div&gt;</content><category term="Edward"></category><category term="MCMC"></category></entry><entry><title>Docker images</title><link href="http://mattpitkin.github.io/samplers-demo/pages/docker/" rel="alternate"></link><published>2018-02-09T15:03:00+00:00</published><updated>2018-02-09T15:03:00+00:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-02-09:/samplers-demo/pages/docker/</id><summary type="html">&lt;p&gt;I have created &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; images, available on &lt;a href="https://hub.docker.com/r/mattpitkin/samplers/tags/"&gt;DockerHub&lt;/a&gt;,
 which have all the samplers included in this demonstration installed.&lt;/p&gt;
 &lt;p&gt;The images with the codes installed using a Python 2, Python 3, or a
 &lt;a href="http://jupyter.org/"&gt;Jupyter notebook&lt;/a&gt; server (containing both Python 2 and 3 kernels) can be downloaded using:&lt;/p&gt;
