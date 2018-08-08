@@ -6,7 +6,7 @@
         <meta name="author" content="Matthew Pitkin">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <title>An example using UltraNest | Samplers Demo</title>
+        <title>An example using edward | Samplers Demo</title>
 
 	<link rel="shortcut icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
@@ -427,170 +427,113 @@ article .meta a.comments_btn:hover {
 <div class="container post">
     <article>
         <header>
-            <h1>An example using UltraNest</h1>
-            <time datetime="article.date.isoformat()" pubdate>Mon 16 July 2018</time>
+            <h1>An example using edward</h1>
+            <time datetime="article.date.isoformat()" pubdate>Thu 29 March 2018</time>
         </header>
 
         <div class="article_content">
             
 
-<p>Here we show a standalone example of using <a href="https://johannesbuchner.github.io/UltraNest/ultranest/">UltraNest</a> to
+<p>Here we show a standalone example of using <a href="http://edwardlib.org/">edward</a> to
 estimate the parameters of a straight line model in data with Gaussian noise. The
 data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
 from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
-script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_UltraNest.py">here</a>.
+script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_edward.py">here</a>.
 </p>
 <h2>Example code</h2>
 <figure class='code'>
-<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_UltraNest.py'>download</a></figcaption>
+<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_edward.py'>download</a></figcaption>
 
 <div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Example of running UltraNest to fit the parameters of a straight line.</span>
+<span class="sd">Example of running edward to fit the parameters of a straight line.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="c1"># plot posterior samples (if corner.py is installed)</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="c1"># set backend now as nested_samplers module tries changing backend</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
-    <span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
-    <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
-    <span class="n">doplot</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">doplot</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
 
-<span class="c1"># import UltraNest modules</span>
-<span class="kn">from</span> <span class="nn">nested_sampling.samplers.hiermetriclearn</span> <span class="kn">import</span> <span class="n">MetricLearningFriendsConstrainer</span>
-<span class="kn">from</span> <span class="nn">nested_sampling.nested_integrator</span> <span class="kn">import</span> <span class="n">nested_integrator</span>
-<span class="kn">from</span> <span class="nn">nested_sampling.nested_sampler</span> <span class="kn">import</span> <span class="n">NestedSampler</span>
-<span class="kn">from</span> <span class="nn">nested_sampling.termination_criteria</span> <span class="kn">import</span> <span class="n">TerminationCriterion</span>
-<span class="kn">from</span> <span class="nn">nested_sampling.postprocess</span> <span class="kn">import</span> <span class="n">equal_weighted_posterior</span>
+<span class="c1"># import edward and TensorFlow</span>
+<span class="kn">import</span> <span class="nn">edward</span> <span class="kn">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">edward.models</span> <span class="kn">import</span> <span class="n">Normal</span><span class="p">,</span> <span class="n">Uniform</span><span class="p">,</span> <span class="n">Empirical</span>
 
 <span class="c1"># import model and data</span>
 <span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">LN2PI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-<span class="n">LNSIGMA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+<span class="c1"># set the priors</span>
+<span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span> <span class="c1"># lower range of uniform distribution on c</span>
+<span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>  <span class="c1"># upper range of uniform distribution on c</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">cmax</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">prior_transform</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A function defining the tranform between the parameterisation in the unit hypercube</span>
-<span class="sd">    to the true parameters.</span>
+<span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of Gaussian distribution on m</span>
+<span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of Gaussian distribution on m</span>
+<span class="n">mp</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mmu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">msigma</span><span class="p">)</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        theta (list): a list/array containing the parameters.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        list: a new list/array with the transformed parameters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="c1"># set the likelihood containing the model</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mp</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">cp</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
 
-    <span class="c1"># unpack the parameters (in their unit hypercube form)</span>
-    <span class="n">mprime</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">cprime</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># set number of samples</span>
+<span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">2000</span> <span class="c1"># final number of samples</span>
+<span class="n">Ntune</span> <span class="o">=</span> <span class="mi">2000</span>    <span class="c1"># number of tuning samples</span>
 
-    <span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower bound on uniform prior on c</span>
-    <span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper bound on uniform prior on c</span>
+<span class="c1"># set parameters to infer</span>
+<span class="n">qm</span> <span class="o">=</span> <span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nsamples</span><span class="o">+</span><span class="n">Ntune</span><span class="p">)))</span>
+<span class="n">qc</span> <span class="o">=</span> <span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nsamples</span><span class="o">+</span><span class="n">Ntune</span><span class="p">)))</span>
 
-    <span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of Gaussian prior on m</span>
-    <span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of Gaussian prior on m</span>
+<span class="c1"># use Hamiltonian Monte Carlo</span>
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">HMC</span><span class="p">({</span><span class="n">mp</span><span class="p">:</span> <span class="n">qm</span><span class="p">,</span> <span class="n">cp</span><span class="p">:</span> <span class="n">qc</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">y</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">)</span> <span class="c1"># higher steps sizes can lead to zero acceptance rates</span>
 
-    <span class="n">m</span> <span class="o">=</span> <span class="n">mmu</span> <span class="o">+</span> <span class="n">msigma</span><span class="o">*</span><span class="n">ndtri</span><span class="p">(</span><span class="n">mprime</span><span class="p">)</span> <span class="c1"># convert back to m</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">cprime</span><span class="o">*</span><span class="p">(</span><span class="n">cmax</span><span class="o">-</span><span class="n">cmin</span><span class="p">)</span> <span class="o">+</span> <span class="n">cmin</span>  <span class="c1"># convert back to c</span>
+<span class="c1"># extract the samples</span>
+<span class="n">msamples</span> <span class="o">=</span> <span class="n">qm</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">()[</span><span class="n">Ntune</span><span class="p">:]</span>
+<span class="n">csamples</span> <span class="o">=</span> <span class="n">qc</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">()[</span><span class="n">Ntune</span><span class="p">:]</span>
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">msamples</span><span class="p">,</span> <span class="n">csamples</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
-
-<span class="k">def</span> <span class="nf">loglikelihood_ultranest</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The log-likelihood function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># unpack the parameters</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="c1"># normalisation</span>
-    <span class="n">norm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">LN2PI</span> <span class="o">-</span> <span class="n">M</span><span class="o">*</span><span class="n">LNSIGMA</span>
-
-    <span class="c1"># chi-squared (data, sigma and x are global variables defined early on in this notebook)</span>
-    <span class="n">chisq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="n">data</span><span class="o">-</span><span class="n">straight_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span><span class="o">/</span><span class="n">sigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">norm</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">chisq</span>
-
-<span class="n">nlive</span> <span class="o">=</span> <span class="mi">1024</span>      <span class="c1"># number of live points</span>
-<span class="n">ndims</span> <span class="o">=</span> <span class="mi">2</span>         <span class="c1"># two parameters</span>
-<span class="n">tol</span> <span class="o">=</span> <span class="mf">0.5</span>         <span class="c1"># the stopping criterion</span>
-
-<span class="c1"># set &quot;constrainer&quot; for sampling the constrained prior</span>
-<span class="n">constrainer</span> <span class="o">=</span> <span class="n">MetricLearningFriendsConstrainer</span><span class="p">(</span><span class="n">metriclearner</span><span class="o">=</span><span class="s1">&#39;truncatedscaling&#39;</span><span class="p">,</span> <span class="n">force_shrink</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">rebuild_every</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-
-<span class="c1"># set termination condition</span>
-<span class="n">termination</span> <span class="o">=</span> <span class="n">TerminationCriterion</span><span class="p">(</span><span class="n">tolerance</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">maxRemainderFraction</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
-
-<span class="c1"># set the sampler</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">NestedSampler</span><span class="p">(</span><span class="n">nlive_points</span><span class="o">=</span><span class="n">nlive</span><span class="p">,</span> <span class="n">priortransform</span><span class="o">=</span><span class="n">prior_transform</span><span class="p">,</span> <span class="n">loglikelihood</span><span class="o">=</span><span class="n">loglikelihood_ultranest</span><span class="p">,</span> <span class="n">draw_constrained</span><span class="o">=</span><span class="n">constrainer</span><span class="o">.</span><span class="n">draw_constrained</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="n">ndims</span><span class="p">,</span> <span class="n">constrainer_get_Lmax</span><span class="o">=</span><span class="n">constrainer</span><span class="o">.</span><span class="n">get_Lmax</span><span class="p">)</span>
-
-<span class="n">constrainer</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">sampler</span>
-
-<span class="c1"># run the nested sampling algorithm</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">nested_integrator</span><span class="p">(</span><span class="n">sampler</span><span class="p">,</span> <span class="n">termination</span><span class="p">)</span>
-
-<span class="n">logZultranest</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;logZ&#39;</span><span class="p">]</span>        <span class="c1"># value of logZ</span>
-<span class="n">logZerrultranest</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;logZerr&#39;</span><span class="p">]</span>  <span class="c1"># estimate of the statistcal uncertainty on logZ</span>
-
-<span class="c1"># output marginal likelihood</span>
-<span class="k">print</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} </span><span class="se">\u00B1</span><span class="s1"> {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZultranest</span><span class="p">,</span> <span class="n">logZerrultranest</span><span class="p">)))</span>
-
-<span class="c1"># get the posterior samples (first output is samples in the unit hypercube, so ignore that)</span>
-<span class="n">nsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xi</span> <span class="k">for</span> <span class="n">ui</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span> <span class="n">logwidth</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]])</span>
-<span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Li</span> <span class="o">+</span> <span class="n">logwidth</span> <span class="k">for</span> <span class="n">ui</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span> <span class="n">logwidth</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]])</span>
-<span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">probs</span> <span class="o">-</span> <span class="n">probs</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-
-<span class="n">keepidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">probs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="n">postsamples</span> <span class="o">=</span> <span class="n">nsamples</span><span class="p">[</span><span class="n">keepidx</span><span class="p">,:]</span>
+<span class="c1"># plot posterior samples (if corner.py is installed)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
-<span class="k">if</span> <span class="n">doplot</span><span class="p">:</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;UltraNest.png&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;edward.png&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 </figure>
 
 <h2>Running the code</h2>
-<p>A description of installing UltraNest is given <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#UltraNest">here</a>. If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_UltraNest.py"><code>test_UltraNest.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
-<div class="highlight"><pre><span></span>python test_UltraNest.py
+<p>If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_edward.py"><code>test_edward.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
+<div class="highlight"><pre><span></span>python test_edward.py
 </pre></div>
 
 
 <p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
 on the straight line parameters $m$ and $c$.</p>
-<p>Python 2 and 3 Docker images with UltraNest installed are <a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, and to run with, e.g., the Python 2 container, you can do:</p>
+<p>Python 2 and 3 Docker images with edward installed are <a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, and to run with, e.g., the Python 2 container, you can do:</p>
 <div class="highlight"><pre><span></span>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python2
 </pre></div>
 
 
 <p>to enter an interactive container, and then within the contain run:</p>
-<div class="highlight"><pre><span></span>python test_UltraNest.py
+<div class="highlight"><pre><span></span>python test_edward.py
 </pre></div>
         </div>
 
         <div class="meta">
             <div>
-                    <a href="http://mattpitkin.github.io/samplers-demo/tag/ultranest.html" class="tag">UltraNest</a>
-                    <a href="http://mattpitkin.github.io/samplers-demo/tag/nested-sampling.html" class="tag">nested sampling</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/edward.html" class="tag">edward</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
             </div>
         </div>
     </article>
@@ -600,9 +543,9 @@ on the straight line parameters $m$ and $c$.</p>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
     <script type="text/javascript">
       var disqus_shortname = 'sampler-demos';
-      var disqus_identifier = '/pages/ultranest/';
-      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/ultranest/';
-      var disqus_title = 'An example using UltraNest';
+      var disqus_identifier = '/pages/edward/';
+      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/edward/';
+      var disqus_title = 'An example using edward';
       (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
