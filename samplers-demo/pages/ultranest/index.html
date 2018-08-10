@@ -455,7 +455,6 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
@@ -548,7 +547,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">logZerrultranest</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;logZerr&#39;</span><span class="p">]</span>  <span class="c1"># estimate of the statistcal uncertainty on logZ</span>
 
 <span class="c1"># output marginal likelihood</span>
-<span class="k">print</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} </span><span class="se">\u00B1</span><span class="s1"> {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZultranest</span><span class="p">,</span> <span class="n">logZerrultranest</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} ± {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZultranest</span><span class="p">,</span> <span class="n">logZerrultranest</span><span class="p">))</span>
 
 <span class="c1"># get the posterior samples (first output is samples in the unit hypercube, so ignore that)</span>
 <span class="n">nsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xi</span> <span class="k">for</span> <span class="n">ui</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">Li</span><span class="p">,</span> <span class="n">logwidth</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]])</span>

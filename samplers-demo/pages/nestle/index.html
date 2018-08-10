@@ -455,7 +455,6 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
@@ -520,7 +519,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">logZerrnestle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">infogainnestle</span><span class="o">/</span><span class="n">nlive</span><span class="p">)</span> <span class="c1"># estimate of the statistcal uncertainty on logZ</span>
 
 <span class="c1"># output marginal likelihood</span>
-<span class="k">print</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} </span><span class="se">\u00B1</span><span class="s1"> {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZnestle</span><span class="p">,</span> <span class="n">logZerrnestle</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} ± {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZnestle</span><span class="p">,</span> <span class="n">logZerrnestle</span><span class="p">))</span>
 
 <span class="c1"># re-scale weights to have a maximum of one</span>
 <span class="n">nweights</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>

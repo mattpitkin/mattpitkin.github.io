@@ -512,6 +512,9 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Install CPNest</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org cpnest
 
+<span class="c"># Install dynesty</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org dynesty
+
 <span class="c"># Install edward and TensorFlow</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
 
@@ -609,6 +612,9 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 
 <span class="c"># Install CPNest</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org cpnest
+
+<span class="c"># Install dynesty</span>
+<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org dynesty
 
 <span class="c"># Install edward and TensorFlow</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
@@ -713,6 +719,9 @@ USER root
 <span class="c"># Install CPNest</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org cpnest
 
+<span class="c"># Install dynesty</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org dynesty
+
 <span class="c"># Install edward and TensorFlow (v1.5 as later version break Edward v1.3.5)</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
 
@@ -759,7 +768,7 @@ USER root
 USER <span class="nv">$NB_USER</span>
 
 <span class="c"># add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)</span>
-<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install --pre pymc3; pip install emcee pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest py-cpuinfo tensorflow==1.5 edward; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
+<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install --pre pymc3; pip install emcee pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest py-cpuinfo tensorflow==1.5 edward dynesty; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
 
 USER root
 <span class="c"># add global environment variables</span>

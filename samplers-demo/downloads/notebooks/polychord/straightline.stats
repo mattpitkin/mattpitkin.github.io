@@ -6,22 +6,22 @@ Evidence estimates:
 Global evidence:
 ----------------
 
-log(Z)       =  -0.87851600E+002 +/-   0.10190543E+000
+log(Z)       =  -0.88060916E+002 +/-   0.10296893E+000
 
 
 Local evidences:
 ----------------
 
-log(Z_ 1)  =  -0.87851600E+002 +/-   0.10190543E+000
+log(Z_ 1)  =  -0.88060916E+002 +/-   0.10296893E+000
 
 
 Run-time information:
 ---------------------
 
  ncluster:          0 /       1
- nposterior:    13753
- nequals:        2473
- ndead:         13753
+ nposterior:    13976
+ nequals:        2551
+ ndead:         13976
  nlive:          1024
- nlike:        533349
- <nlike>:       20.82   (    2.08 per slice )
+ nlike:        541898
+ <nlike>:       30.69   (    3.07 per slice )

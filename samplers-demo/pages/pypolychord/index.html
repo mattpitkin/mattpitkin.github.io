@@ -455,7 +455,6 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">resource</span>
@@ -559,7 +558,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="n">curlimit</span><span class="p">)</span>
 
 <span class="c1"># output marginal likelihood</span>
-<span class="k">print</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} </span><span class="se">\u00B1</span><span class="s1"> {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logZ</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">logZerr</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} ± {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logZ</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">logZerr</span><span class="p">))</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
