@@ -434,9 +434,8 @@ article .meta a.comments_btn:hover {
 
     <div class="article_content">
       
-[PyMC3](https://docs.pymc.io/index.html) is a great tool for doing Bayesian inference and parameter estimation. It has a load of [in-built probability distributions](https://docs.pymc.io/api/distributions.html) that you can use to set up priors and likelihood functions for your particular model. You can even create your own [custom distributions](https://docs.pymc.io/prob_dists.html#custom-distributions).
-
-However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped `C` code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions! 
+<p><a href="https://docs.pymc.io/index.html">PyMC3</a> is a great tool for doing Bayesian inference and parameter estimation. It has a load of <a href="https://docs.pymc.io/api/distributions.html">in-built probability distributions</a> that you can use to set up priors and likelihood functions for your particular model. You can even create your own <a href="https://docs.pymc.io/prob_dists.html#custom-distributions">custom distributions</a>.</p>
+<p>However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped <code>C</code> code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions!</p>
 
     </div>
 
