@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Samplers Demo - articles</title><link href="http://mattpitkin.github.io/samplers-demo/" rel="alternate"></link><link href="http://mattpitkin.github.io/samplers-demo/feeds/articles.atom.xml" rel="self"></link><id>http://mattpitkin.github.io/samplers-demo/</id><updated>2018-08-27T15:30:00+01:00</updated><entry><title>Using a "black box" likelihood function in PyMC3</title><link href="http://mattpitkin.github.io/samplers-demo/pages/pymc3-blackbox-likelihood/" rel="alternate"></link><published>2018-08-27T15:30:00+01:00</published><updated>2018-08-27T15:30:00+01:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-08-27:/samplers-demo/pages/pymc3-blackbox-likelihood/</id><summary type="html">&lt;style type="text/css"&gt;/*!
-*
-* IPython notebook
-*
-*/
-/* CSS font colors for translated ANSI colors. */
-.ansibold {
-  font-weight: bold;
-}
-/* use dark versions for foreground, to improve visibility */
-.ansiblack {
-  color: black;
-}
-.ansired {
-  color: darkred;
-}
-.ansigreen {
-  color: darkgreen;
-}
-.ansiyellow {
-  color: #c4a000;
-}
-.ansiblue {
-  color: darkblue;
-}
-.ansipurple {
-  color: darkviolet;
-}
-.ansicyan {
-  color: steelblue;
-}
-.ansigray {
-  color: gray;
-}
-/* and light for background, for the …&lt;/style&gt;</summary><content type="html">&lt;style type="text/css"&gt;/*!
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Samplers Demo - articles</title><link href="http://mattpitkin.github.io/samplers-demo/" rel="alternate"></link><link href="http://mattpitkin.github.io/samplers-demo/feeds/articles.atom.xml" rel="self"></link><id>http://mattpitkin.github.io/samplers-demo/</id><updated>2018-08-27T15:30:00+01:00</updated><entry><title>Using a "black box" likelihood function in PyMC3</title><link href="http://mattpitkin.github.io/samplers-demo/pages/pymc3-blackbox-likelihood/" rel="alternate"></link><published>2018-08-27T15:30:00+01:00</published><updated>2018-08-27T15:30:00+01:00</updated><author><name>Matthew Pitkin</name></author><id>tag:mattpitkin.github.io,2018-08-27:/samplers-demo/pages/pymc3-blackbox-likelihood/</id><summary type="html">
+[PyMC3](https://docs.pymc.io/index.html) is a great tool for doing Bayesian inference and parameter estimation. It has a load of [in-built probability distributions](https://docs.pymc.io/api/distributions.html) that you can use to set up priors and likelihood functions for your particular model. You can even create your own [custom distributions](https://docs.pymc.io/prob_dists.html#custom-distributions).
+
+However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped `C` code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions! 
+</summary><content type="html">&lt;style type="text/css"&gt;/*!
 *
 * IPython notebook
 *
@@ -1009,8 +979,11 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id='Using-PyMC3-with-a-"black-box"-model/likelihood'&gt;Using PyMC3 with a "black box" model/likelihood&lt;a class="anchor-link" href='#Using-PyMC3-with-a-"black-box"-model/likelihood'&gt;Â¶&lt;/a&gt;&lt;/h1&gt;&lt;p&gt;&lt;a href="https://docs.pymc.io/index.html"&gt;PyMC3&lt;/a&gt; is a great tool for doing Bayesian inference and parameter estimation. It has a load of &lt;a href="https://docs.pymc.io/api/distributions.html"&gt;in-built probability distributions&lt;/a&gt; that you can use to set up priors and likelihood functions for your particular model. You can even create your own &lt;a href="https://docs.pymc.io/prob_dists.html#custom-distributions"&gt;custom distributions&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped &lt;code&gt;C&lt;/code&gt; code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions!&lt;/p&gt;
+
+[PyMC3](https://docs.pymc.io/index.html) is a great tool for doing Bayesian inference and parameter estimation. It has a load of [in-built probability distributions](https://docs.pymc.io/api/distributions.html) that you can use to set up priors and likelihood functions for your particular model. You can even create your own [custom distributions](https://docs.pymc.io/prob_dists.html#custom-distributions).
+
+However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped `C` code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions! 
+
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pymc3&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pm&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;external_module&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;my_external_func&lt;/span&gt;  &lt;span class="c1"&gt;# your external function!&lt;/span&gt;
 
@@ -1804,6 +1777,14 @@ Auto-correlation length (Pure PyMC3): 3
 "/&gt;
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;The Jupyter notebook used to produce this page can be downloaded from &lt;a href="http://mattpitkin.github.io/samplers-demo/downloads/notebooks/PyMC3CustomExternalLikelihood.ipynb"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
