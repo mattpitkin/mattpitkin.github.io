@@ -428,6 +428,39 @@ article .meta a.comments_btn:hover {
 
   <article>
     <header>
+      <h2><a href="http://mattpitkin.github.io/samplers-demo/pages/pymc4/">An example using PyMC4</a></h2>
+      <time datetime="" title="2018-09-03T12:52:00+01:00" pubdate>Mon 03 September 2018</time>
+    </header>
+
+    <div class="article_content">
+      
+
+<p>Here we show a standalone example of using <a href="https://github.com/pymc-devs/pymc4">PyMC4</a> to
+estimate the parameters of a straight line model in data with Gaussian noise. The
+data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
+from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
+script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_pymc4.py">here</a>.
+
+    </div>
+
+    <div class="meta">
+      <div>
+        <a href="http://mattpitkin.github.io/samplers-demo/pages/pymc4/" class="read_more">Read more &#8594;</a>
+      </div>
+
+      <div>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/pymc4.html" class="tag">PyMC4</a>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow-probability.html" class="tag">TensorFlow Probability</a>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/edward-2.html" class="tag">Edward 2</a>
+      </div>
+
+    </div>
+
+  </article>
+  <div class="separator"></div>
+  <article>
+    <header>
       <h2><a href="http://mattpitkin.github.io/samplers-demo/pages/tensorflow-probability/">An example using TensorFlow Probability</a></h2>
       <time datetime="" title="2018-09-03T12:47:00+01:00" pubdate>Mon 03 September 2018</time>
     </header>
@@ -454,6 +487,34 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
             <a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow.html" class="tag">TensorFlow</a>
             <a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow-probability.html" class="tag">TensorFlow Probability</a>
             <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+      </div>
+
+    </div>
+
+  </article>
+  <div class="separator"></div>
+  <article>
+    <header>
+      <h2><a href="http://mattpitkin.github.io/samplers-demo/pages/pymc3-blackbox-likelihood/">Using a "black box" likelihood function in PyMC3</a></h2>
+      <time datetime="" title="2018-08-27T15:30:00+01:00" pubdate>Mon 27 August 2018</time>
+    </header>
+
+    <div class="article_content">
+      
+<p><a href="https://docs.pymc.io/index.html">PyMC3</a> is a great tool for doing Bayesian inference and parameter estimation. It has a load of <a href="https://docs.pymc.io/api/distributions.html">in-built probability distributions</a> that you can use to set up priors and likelihood functions for your particular model. You can even create your own <a href="https://docs.pymc.io/prob_dists.html#custom-distributions">custom distributions</a>.</p>
+<p>However, this is not necessarily that simple if you have a model function, or probability distribution, that, for example, relies on an external code that you have little/no control over (and may even be, for example, wrapped <code>C</code> code rather than Python). This can be problematic went you need to pass parameters set as PyMC3 distributions to these external functions; your external function probably wants you to pass it floating point numbers rather than PyMC3 distributions!</p>
+
+    </div>
+
+    <div class="meta">
+      <div>
+        <a href="http://mattpitkin.github.io/samplers-demo/pages/pymc3-blackbox-likelihood/" class="read_more">Read more &#8594;</a>
+      </div>
+
+      <div>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/pymc3.html" class="tag">PyMC3</a>
+            <a href="http://mattpitkin.github.io/samplers-demo/tag/theano.html" class="tag">Theano</a>
       </div>
 
     </div>
