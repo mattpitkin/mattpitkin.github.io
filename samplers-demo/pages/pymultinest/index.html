@@ -458,6 +458,12 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
 <span class="c1"># import PyMultiNest Solver class</span>
 <span class="kn">from</span> <span class="nn">pymultinest.solve</span> <span class="kn">import</span> <span class="n">Solver</span>
 
@@ -563,12 +569,10 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mchain_pymnest</span><span class="p">,</span> <span class="n">cchain_pymnest</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">samples_pymnest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
-    <span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
     <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>

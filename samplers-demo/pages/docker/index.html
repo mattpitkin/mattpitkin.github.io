@@ -519,9 +519,9 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
 
 <span class="c"># Install MultiNest </span>
-<span class="k">ADD</span><span class="s"> MultiNest_v3.10_CMake.tar.gz /samplers</span>
-<span class="k">RUN</span> <span class="nb">cd</span> MultiNest_v3.10_CMake/multinest/build <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> make install <span class="o">&amp;&amp;</span> cd
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/farhanferoz/MultiNest.git
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/MultiNest/MultiNest_v3.11_CMake/multinest <span class="o">&amp;&amp;</span> mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build <span class="se">\</span>
+<span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cd
 
 <span class="c"># Install PyMultiNest</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org pymultinest
@@ -531,10 +531,10 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers/DNest4/python <span class="o">&amp;&amp;</span> python setup.py install --prefix<span class="o">=</span>/usr/local
 
 <span class="c"># Add PolyChord</span>
-<span class="k">ADD</span><span class="s"> PolyChord_v1.12.tar.gz /samplers</span>
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/PolyChord/PolyChordLite.git
 
 <span class="c"># Install PyPolyChord (don&#39;t use the make file, use setup.py)</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/PolyChord <span class="o">&amp;&amp;</span> make <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> touch PyPolyChord/.ld_preload.sh<span class="p">;</span> ldd lib/libchord.so <span class="p">|</span> grep -o <span class="s1">&#39;/.*libmpi.so[^/]* &#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print &quot;export LD_PRELOAD=&quot;$$1&quot;:$$LD_PRELOAD&quot;}&#39;</span> &gt; PyPolyChord/.ld_preload.sh<span class="p">;</span> python setup.py install
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/PolyChordLite <span class="o">&amp;&amp;</span> make pypolychord <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> python setup.py install
 
 <span class="c"># Add getdist package for reading in PolyChord output</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org getdist
@@ -545,10 +545,10 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest <span class="o">&amp;&amp;</span> python setup.py install --prefix<span class="o">=</span>/usr/local
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python2.7/dist-packages/nested_sampling/clustering
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python2.7/dist-packages/nested_sampling-*.egg/nested_sampling/clustering
 
 <span class="c"># add global environment variables</span>
-<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering</span>
+<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChordLite/lib:/samplers/UltraNest/nested_sampling/clustering:/samplers/MultiNest/MultiNest_v3.11_CMake/multinest/lib</span>
 <span class="k">ENV</span><span class="s"> PYTHONPATH /usr/local/lib/python2.7/dist-packages/nested_sampling</span>
 
 <span class="c"># change to new working directory</span>
@@ -619,10 +619,10 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Install edward and TensorFlow</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
 
-<span class="c"># Install MultiNest </span>
-<span class="k">ADD</span><span class="s"> MultiNest_v3.10_CMake.tar.gz /samplers</span>
-<span class="k">RUN</span> <span class="nb">cd</span> MultiNest_v3.10_CMake/multinest/build <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> make install <span class="o">&amp;&amp;</span> cd
+<span class="c"># Install MultiNest</span>
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/farhanferoz/MultiNest.git
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/MultiNest/MultiNest_v3.11_CMake/multinest <span class="o">&amp;&amp;</span> mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cd
 
 <span class="c"># Install PyMultiNest</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pymultinest
@@ -632,10 +632,10 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers/DNest4/python <span class="o">&amp;&amp;</span> python3 setup.py install --prefix<span class="o">=</span>/usr/local
 
 <span class="c"># Add PolyChord</span>
-<span class="k">ADD</span><span class="s"> PolyChord_v1.12.tar.gz /samplers</span>
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/PolyChord/PolyChordLite.git
 
 <span class="c"># Install PyPolyChord (don&#39;t use the make file, use setup.py)</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/PolyChord <span class="o">&amp;&amp;</span> make <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> touch PyPolyChord/.ld_preload.sh<span class="p">;</span> ldd lib/libchord.so <span class="p">|</span> grep -o <span class="s1">&#39;/.*libmpi.so[^/]* &#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print &quot;export LD_PRELOAD=&quot;$$1&quot;:$$LD_PRELOAD&quot;}&#39;</span> &gt; PyPolyChord/.ld_preload.sh<span class="p">;</span> python3 setup.py install
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/PolyChordLite <span class="o">&amp;&amp;</span> make pypolychord <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> python3 setup.py install
 
 <span class="c"># Add getdist package for reading in PolyChord output</span>
 <span class="k">RUN</span> pip3 install --trusted-host pypi.python.org getdist
@@ -646,10 +646,10 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
 <span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest <span class="o">&amp;&amp;</span> python3 setup.py install --prefix<span class="o">=</span>/usr/local
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python3.5/dist-packages/nested_sampling/clustering
+<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python3.5/dist-packages/nested_sampling-*.egg/nested_sampling/clustering
 
 <span class="c"># add global environment variables</span>
-<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChord/lib:/samplers/UltraNest/nested_sampling/clustering</span>
+<span class="k">ENV</span><span class="s"> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChordLite/lib:/samplers/UltraNest/nested_sampling/clustering:/samplers/MultiNest/MultiNest_v3.11_CMake/multinest/lib</span>
 <span class="k">ENV</span><span class="s"> PYTHONPATH /usr/local/lib/python3.5/dist-packages/nested_sampling</span>
 
 <span class="c"># update alternatives to python3 (generally not what you should do, but it shouldn&#39;t be a problem in this container)</span>
@@ -695,6 +695,7 @@ USER root
 USER <span class="nv">$NB_USER</span>
 <span class="k">RUN</span> conda install -y numpy
 <span class="k">RUN</span> conda install -y scipy
+<span class="k">RUN</span> conda install -y mkl-service
 USER root
 
 <span class="c"># Install matplotlib, corner and cpuinfo</span>
@@ -705,13 +706,13 @@ USER root
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org pyjags
 
 <span class="c"># Install emcee</span>
-<span class="k">RUN</span> pip install --trusted-host pypi.python.org emcee
+<span class="k">RUN</span> pip install --upgrade --trusted-host pypi.python.org emcee --pre
 
 <span class="c"># Install PyStan</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org pystan
 
-<span class="c"># Install PyMC3 (use pre-release version as version 3.4.1 has a bug)</span>
-<span class="k">RUN</span> pip install --trusted-host pypi.python.org --pre pymc3
+<span class="c"># Install PyMC3</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org pymc3
 
 <span class="c"># Install Nestle</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org nestle
@@ -725,10 +726,10 @@ USER root
 <span class="c"># Install edward and TensorFlow (v1.5 as later version break Edward v1.3.5)</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
 
-<span class="c"># Install MultiNest </span>
-<span class="k">ADD</span><span class="s"> MultiNest_v3.10_CMake.tar.gz /samplers</span>
-<span class="k">RUN</span> <span class="nb">cd</span> MultiNest_v3.10_CMake/multinest/build <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> make install <span class="o">&amp;&amp;</span> cd
+<span class="c"># Install MultiNest</span>
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="o">&amp;&amp;</span> git clone https://github.com/farhanferoz/MultiNest.git
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/MultiNest/MultiNest_v3.11_CMake/multinest <span class="o">&amp;&amp;</span> mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build <span class="se">\</span>
+<span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cd
 
 <span class="c"># Install PyMultiNest</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org pymultinest
@@ -744,11 +745,11 @@ USER root
 <span class="c"># set working directory as &quot;/home/jovyan/work&quot;</span>
 <span class="k">WORKDIR</span><span class="s"> ${HOME}/work</span>
 
-<span class="c"># Add PolyChord (don&#39;t install for Python 3 as it does not work yet)</span>
-<span class="k">ADD</span><span class="s"> PolyChord_v1.12.tar.gz ${HOME}</span>
+<span class="c"># Add PolyChord</span>
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="o">&amp;&amp;</span> git clone https://github.com/PolyChord/PolyChordLite.git
 
 <span class="c"># Install PyPolyChord (don&#39;t use the make file, use setup.py)</span>
-<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/PolyChord <span class="o">&amp;&amp;</span> make <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> touch PyPolyChord/.ld_preload.sh<span class="p">;</span> ldd lib/libchord.so <span class="p">|</span> grep -o <span class="s1">&#39;/.*libmpi.so[^/]* &#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{print &quot;export LD_PRELOAD=&quot;$$1&quot;:$$LD_PRELOAD&quot;}&#39;</span> &gt; PyPolyChord/.ld_preload.sh<span class="p">;</span> python setup.py install <span class="o">&amp;&amp;</span> chmod -R a+rw <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/PolyChord
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/PolyChordLite <span class="o">&amp;&amp;</span> make pypolychord <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> python setup.py install <span class="o">&amp;&amp;</span> chmod -R a+rw <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/PolyChordLite
 
 <span class="c"># Install getdist for PolyChord post-processing</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org getdist
@@ -760,19 +761,10 @@ USER root
 <span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
 <span class="k">RUN</span> chown -R <span class="nv">$NB_USER</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest
 <span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest <span class="o">&amp;&amp;</span> python setup.py install --prefix<span class="o">=</span>/opt/conda
-<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /opt/conda/lib/python3.6/site-packages/nested_sampling/clustering
+<span class="k">RUN</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /opt/conda/lib/python3.6/site-packages/nested_sampling-*.egg/nested_sampling/clustering
 
-<span class="k">ENV</span><span class="s"> PYTHONPATH /opt/conda/lib/python3.6/site-packages/nested_sampling</span>
-
-<span class="c"># switch back to non-root user</span>
-USER <span class="nv">$NB_USER</span>
-
-<span class="c"># add Python 2 kernel for Jupyter notebook (PyPolyChord needs Python 2 at the moment, disable MPI for PolyChord)</span>
-<span class="k">RUN</span> conda create -y -n py27 <span class="nv">python</span><span class="o">=</span><span class="m">2</span>.7 <span class="o">&amp;&amp;</span> /bin/bash -c <span class="s2">&quot;source activate py27; conda install -y notebook ipykernel; conda install -y numpy; conda install -y scipy; pip install matplotlib corner; pip install --pre pymc3; pip install emcee pystan pyjags pymultinest nestle cpnest getdist metric-learn progressbar-latest py-cpuinfo tensorflow==1.5 edward dynesty; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/DNest4/python; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord; python setup.py install --prefix=/opt/conda/envs/py27; cd </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/UltraNest; python setup.py install --prefix=/opt/conda/envs/py27; cp nested_sampling/clustering/*.so /opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling/clustering; ipython kernel install --user; mkdir -p /opt/conda/envs/py27/etc/conda; echo \&quot;PYTHONPATH=/opt/conda/envs/py27/lib/python2.7/site-packages/nested_sampling\&quot; &gt; /opt/conda/envs/py27/etc/conda/activate.d&quot;</span>
-
-USER root
 <span class="c"># add global environment variables</span>
-<span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&quot;LD_LIBRARY_PATH=/usr/local/lib:</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChord/lib&quot;</span> &gt;&gt; /etc/environment
+<span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&quot;LD_LIBRARY_PATH=/usr/local/lib:</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/PolyChordLite/lib:</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/MultiNest/MultiNest_v3.11_CMake/multinest/lib&quot;</span> &gt;&gt; /etc/environment
 
 <span class="c"># switch back to non-root user</span>
 USER <span class="nv">$NB_USER</span>

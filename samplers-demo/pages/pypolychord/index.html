@@ -460,9 +460,9 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="kn">import</span> <span class="nn">resource</span>
 
 <span class="c1"># import PolyChord</span>
-<span class="kn">import</span> <span class="nn">PyPolyChord</span>
-<span class="kn">from</span> <span class="nn">PyPolyChord.settings</span> <span class="kn">import</span> <span class="n">PolyChordSettings</span>
-<span class="kn">from</span> <span class="nn">PyPolyChord.priors</span> <span class="kn">import</span> <span class="n">UniformPrior</span>
+<span class="kn">import</span> <span class="nn">pypolychord</span>
+<span class="kn">from</span> <span class="nn">pypolychord.settings</span> <span class="kn">import</span> <span class="n">PolyChordSettings</span>
+<span class="kn">from</span> <span class="nn">pypolychord.priors</span> <span class="kn">import</span> <span class="n">UniformPrior</span>
 
 <span class="c1"># import model and data</span>
 <span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
@@ -552,7 +552,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">settings</span> <span class="o">=</span> <span class="n">PolyChordSettings</span><span class="p">(</span><span class="n">ndims</span><span class="p">,</span> <span class="n">nderived</span><span class="p">,</span> <span class="o">**</span><span class="n">pargs</span><span class="p">)</span>
 
 <span class="c1"># run nested sampling</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">PyPolyChord</span><span class="o">.</span><span class="n">run_polychord</span><span class="p">(</span><span class="n">loglikelihood_polychord</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">nderived</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">prior_transform_polychord</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">pypolychord</span><span class="o">.</span><span class="n">run_polychord</span><span class="p">(</span><span class="n">loglikelihood_polychord</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">nderived</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">prior_transform_polychord</span><span class="p">)</span>
 
 <span class="c1"># reset stack resource size</span>
 <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="n">curlimit</span><span class="p">)</span>
