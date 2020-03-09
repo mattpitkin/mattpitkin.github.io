@@ -444,7 +444,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <figure class='code'>
 <figcaption><span></span> <a href='/samplers-demo/downloads/code/test_PyPolyChord.py'>download</a></figcaption>
 
-<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -456,7 +456,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">resource</span>
 
 <span class="c1"># import PolyChord</span>
@@ -547,8 +547,8 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
          <span class="s1">&#39;precision_criterion&#39;</span><span class="p">:</span> <span class="n">tol</span><span class="p">,</span>
          <span class="s1">&#39;base_dir&#39;</span><span class="p">:</span> <span class="n">basedir</span><span class="p">,</span>
          <span class="s1">&#39;file_root&#39;</span><span class="p">:</span> <span class="n">fileroot</span><span class="p">,</span>
-         <span class="s1">&#39;write_resume&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="c1"># don&#39;t output a resume file</span>
-         <span class="s1">&#39;read_resume&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>  <span class="c1"># don&#39;t read a resume file</span>
+         <span class="s1">&#39;write_resume&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># don&#39;t output a resume file</span>
+         <span class="s1">&#39;read_resume&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>  <span class="c1"># don&#39;t read a resume file</span>
 <span class="n">settings</span> <span class="o">=</span> <span class="n">PolyChordSettings</span><span class="p">(</span><span class="n">ndims</span><span class="p">,</span> <span class="n">nderived</span><span class="p">,</span> <span class="o">**</span><span class="n">pargs</span><span class="p">)</span>
 
 <span class="c1"># run nested sampling</span>
@@ -558,11 +558,11 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="n">curlimit</span><span class="p">)</span>
 
 <span class="c1"># output marginal likelihood</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is {} ± {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logZ</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">logZerr</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Marginalised evidence is </span><span class="si">{}</span><span class="s1"> ± </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">logZ</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">logZerr</span><span class="p">))</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
     <span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
     <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -572,31 +572,31 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">samplefile</span><span class="p">)</span>
 <span class="n">postsamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;PyPolyChord.png&#39;</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 </figure>
 
 <h2>Running the code</h2>
 <p>A description of installing PyPolyChord is given <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#PyPolyChord">here</a>. If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_PyPolyChord.py"><code>test_PyPolyChord.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
-<div class="highlight"><pre><span></span>python test_PyPolyChord.py
-</pre></div>
+<div class="highlight"><pre><span></span><code>python test_PyPolyChord.py
+</code></pre></div>
 
 
 <p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
 on the straight line parameters $m$ and $c$.</p>
 <p>Python 2 and 3 Docker images with PolyChord installed are <a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, and to run with, e.g., the Python 2 container, you can do:</p>
-<div class="highlight"><pre><span></span>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python2
-</pre></div>
+<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python2
+</code></pre></div>
 
 
 <p>to enter an interactive container, and then within the contain run:</p>
-<div class="highlight"><pre><span></span>python test_PyPolyChord.py
-</pre></div>
+<div class="highlight"><pre><span></span><code>python test_PyPolyChord.py
+</code></pre></div>
         </div>
 
         <div class="meta">
