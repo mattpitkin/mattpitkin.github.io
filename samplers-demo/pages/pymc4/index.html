@@ -462,8 +462,7 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <span class="c1"># import PyMC4</span>
 <span class="kn">import</span> <span class="nn">pymc4</span> <span class="k">as</span> <span class="nn">pm4</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span> <span class="c1"># For Random Variable operation</span>
-<span class="kn">from</span> <span class="nn">tensorflow_probability</span> <span class="kn">import</span> <span class="n">edward2</span> <span class="k">as</span> <span class="n">ed</span> <span class="c1"># For defining random variables</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 <span class="c1"># import model and data</span>
 <span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
@@ -475,34 +474,36 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span>  <span class="c1"># standard deviation of Gaussian distribution on m</span>
 
 <span class="c1"># convert x values and data to tensors</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">xtensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">datatensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-<span class="c1"># PyMC4 specific model initialisation</span>
-<span class="n">pymc4_linear_regression</span> <span class="o">=</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span><span class="o">=</span><span class="n">cmax</span><span class="p">,</span>
-                                    <span class="n">mmu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">msigma</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
-
-<span class="c1"># create model</span>
-<span class="nd">@pymc4_linear_regression</span><span class="o">.</span><span class="n">define</span>
-<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmin</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">cmax</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">mmu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">msigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-
-    <span class="n">y</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">cfg</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">c</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sigma</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">y</span>
-
-<span class="c1"># add observed data</span>
-<span class="n">pymc4_linear_regression</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="c1"># model must be wrapped with the model decorator</span>
+<span class="nd">@pm4</span><span class="o">.</span><span class="n">model</span>
+<span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">):</span>
+    <span class="n">cvalue</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">cmax</span><span class="p">)</span>  <span class="c1"># prior on c</span>
+    <span class="n">mvalue</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mmu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">msigma</span><span class="p">)</span> <span class="c1"># prior on m</span>
+    
+    <span class="c1"># the straight line model</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">cvalue</span> <span class="o">+</span> <span class="n">mvalue</span> <span class="o">*</span> <span class="n">x</span>
+    
+    <span class="c1"># the likelihood</span>
+    <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;t_obs&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
 <span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># final number of samples</span>
 <span class="n">Nburn</span> <span class="o">=</span> <span class="mi">2000</span>     <span class="c1"># number of tuning samples</span>
 
-<span class="n">pymc4_trace</span> <span class="o">=</span> <span class="n">pm4</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">pymc4_linear_regression</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span>
-                         <span class="n">num_burnin_steps</span><span class="o">=</span><span class="n">Nburn</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                         <span class="n">num_leapfrog_steps</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># perform the sampling</span>
+<span class="n">pymc4_trace</span> <span class="o">=</span> <span class="n">pm4</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">xtensor</span><span class="p">,</span> <span class="n">datatensor</span><span class="p">),</span>
+    <span class="n">num_chains</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">burn_in</span><span class="o">=</span><span class="n">Nburn</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">pymc4_trace</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">],</span> <span class="n">pymc4_trace</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">postsamples</span><span class="p">)</span>
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span>
+    <span class="n">pymc4_trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;model/m&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+    <span class="n">pymc4_trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;model/c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="p">))</span><span class="o">.</span><span class="n">T</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
@@ -527,6 +528,15 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
 on the straight line parameters $m$ and $c$.</p>
+<p>A Python 3 Docker image with PyMC4 installed is
+<a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, which can be used with:</p>
+<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python3
+</code></pre></div>
+
+
+<p>to enter an interactive container, and then within the container the test script can be run with:</p>
+<div class="highlight"><pre><span></span><code>python test_pymc4.py
+</code></pre></div>
         </div>
 
         <div class="meta">

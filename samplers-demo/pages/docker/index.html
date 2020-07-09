@@ -561,22 +561,31 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <figure class='code'>
 <figcaption><span>python3</span> <a href='/samplers-demo/downloads/code/dockerfiles/python3/Dockerfile'>download</a></figcaption>
 
-<div class="highlight"><pre><span></span><code><span class="k">FROM</span> <span class="s">ubuntu:xenial</span>
-<span class="c"># installs Ubuntu 16.04</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span> <span class="s">continuumio/miniconda3</span>
+<span class="k">LABEL</span> <span class="nv">name</span><span class="o">=</span><span class="s2">&quot;samplers-demo miniconda3&quot;</span> <span class="se">\</span>
+<span class="nv">maintainer</span><span class="o">=</span><span class="s2">&quot;Matthew Pitkin &lt;matthew.pitkin@ligo.org&gt;&quot;</span> <span class="se">\</span>
+<span class="nv">date</span><span class="o">=</span><span class="s2">&quot;20200205&quot;</span>
 
-<span class="k">WORKDIR</span><span class="s"> /samplers</span>
+<span class="k">RUN</span> conda update -n base -c defaults conda
 
-<span class="c">### Distribution package installs</span>
+<span class="k">ENV</span> conda_env python37
+
+<span class="k">RUN</span> conda create -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+<span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">&quot;source activate </span><span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span><span class="s2">&quot;</span> &gt; ~/.bashrc
+<span class="k">ENV</span> PATH /opt/conda/envs/<span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span>/bin:<span class="nv">$PATH</span>
+<span class="k">RUN</span> /bin/bash -c <span class="s2">&quot;source activate </span><span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">RUN</span> conda info
+<span class="k">RUN</span> python --version
+
+<span class="c"># bug fix - see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=932168</span>
+<span class="k">RUN</span> sed -i <span class="s2">&quot;s#deb http://security.debian.org/debian-security stretch/updates main#deb http://deb.debian.org/debian-security stretch/updates main#g&quot;</span> /etc/apt/sources.list
+
+<span class="c"># Install some requirements</span>
 <span class="k">RUN</span> apt-get update
-
-<span class="c"># install git and gfortran, pkg-config, BLAS, cmake, libmpich-dev</span>
-<span class="k">RUN</span> apt-get install -y git gfortran pkg-config libblas-dev liblapack-dev libmpich-dev cmake libopenmpi-dev dvipng
+<span class="k">RUN</span> apt-get install -y build-essential git dvipng r-base
 
 <span class="c"># install light(ish) weight LaTeX</span>
 <span class="k">RUN</span> apt-get install -y --no-install-recommends texlive texlive-latex-extra
-
-<span class="c"># install pip</span>
-<span class="k">RUN</span> apt-get install -y python3 python3-dev python3-pip python3-tk
 
 <span class="c"># Install JAGS</span>
 <span class="k">RUN</span> apt-get install -y jags
@@ -585,82 +594,103 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> apt-get -y autoremove <span class="se">\</span>
     <span class="o">&amp;&amp;</span> apt-get -y clean
 
-<span class="c">### Python modules installed via conda and pip</span>
-<span class="k">RUN</span> pip3 install --upgrade pip
+<span class="c"># Install conda-installable programs</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -y matplotlib numpy scipy pandas ipython cython
 
-<span class="c"># Install numpy, scipy, matplotlib and corner</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org numpy scipy matplotlib corner
+<span class="c"># Install corner</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge corner
 
-<span class="c"># Install IPython Kernel</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org ipykernel
-
-<span class="c"># Install samplers</span>
-<span class="c"># Install PyJAGS from PyPI</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pyjags
-
-<span class="c"># Install emcee</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org emcee
-
-<span class="c"># Install PyStan</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pystan
-
-<span class="c"># Install PyMC3</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pymc3
-
-<span class="c"># Install Nestle</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org nestle
+<span class="c"># Install some conda-installable samplers</span>
+<span class="c"># Install ultranest</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge ultranest
 
 <span class="c"># Install CPNest</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org cpnest
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge cpnest
 
 <span class="c"># Install dynesty</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org dynesty
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge dynesty
 
-<span class="c"># Install edward and TensorFlow</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org <span class="nv">tensorflow</span><span class="o">==</span><span class="m">1</span>.5 edward
-
-<span class="c"># Install MultiNest</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/farhanferoz/MultiNest.git
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/MultiNest/MultiNest_v3.11_CMake/multinest <span class="o">&amp;&amp;</span> mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> cmake .. <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cd
+<span class="c"># Install Nestle</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge nestle
 
 <span class="c"># Install PyMultiNest</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org pymultinest
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge pymultinest
 
-<span class="c"># Install DNest4 (and clean up so that Python2 install can also proceed)</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/eggplantbren/DNest4.git
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/DNest4/python <span class="o">&amp;&amp;</span> python3 setup.py install --prefix<span class="o">=</span>/usr/local
+<span class="c"># Install DNest4</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge dnest4
+
+<span class="c"># Install PyMC3</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge pymc3
+
+<span class="c"># Install emcee</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge emcee
+
+<span class="c"># Install ptemcee</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge ptemcee
+
+<span class="c"># Install PySTAN</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge pystan
+
+<span class="c"># Install bilby</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge bilby
+
+<span class="c"># Install pip-requirements</span>
+<span class="k">RUN</span> pip install --upgrade pip
+<span class="k">RUN</span> pip install --upgrade setuptools
+
+<span class="c"># intall kernel for Jupyter notebooks</span>
+<span class="k">RUN</span> pip install ipykernel
+
+<span class="c"># Install samplers using pip</span>
+<span class="c"># Install PyJAGS</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org pyjags
+
+<span class="c"># Install YAPS</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org yaps
+
+<span class="c"># Install edward2 and TensorFlow Probability</span>
+<span class="k">RUN</span> pip install tensorflow-probability edward2
 
 <span class="c"># Add PolyChord</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/PolyChord/PolyChordLite.git
+<span class="k">RUN</span> git clone https://github.com/PolyChord/PolyChordLite.git <span class="se">\</span>
+<span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nb">cd</span> PolyChordLite <span class="o">&amp;&amp;</span> python setup.py --no-mpi install<span class="o">)</span>
 
-<span class="c"># Install PyPolyChord (don&#39;t use the make file, use setup.py)</span>
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/PolyChordLite <span class="o">&amp;&amp;</span> make pypolychord <span class="nv">MPI</span><span class="o">=</span> <span class="o">&amp;&amp;</span> python3 setup.py install
+<span class="c"># Install Zeus</span>
+<span class="k">RUN</span> pip install zeus-mcmc
 
-<span class="c"># Add getdist package for reading in PolyChord output</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org getdist
+<span class="c"># Install Sampyl</span>
+<span class="k">RUN</span> pip install sampyl-mcmc
 
-<span class="c"># Install UltraNest</span>
-<span class="c"># first install metric-learn and progressbar-latest, which are required by UltraNest</span>
-<span class="k">RUN</span> pip3 install --trusted-host pypi.python.org metric-learn progressbar-latest
+<span class="c"># Install Mici</span>
+<span class="k">RUN</span> pip install mici
 
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers <span class="o">&amp;&amp;</span> git clone https://github.com/JohannesBuchner/UltraNest.git
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest <span class="o">&amp;&amp;</span> python3 setup.py install --prefix<span class="o">=</span>/usr/local
-<span class="k">RUN</span> <span class="nb">cd</span> /samplers/UltraNest/nested_sampling/clustering <span class="o">&amp;&amp;</span> make <span class="o">&amp;&amp;</span> cp *.so /usr/local/lib/python3.5/dist-packages/nested_sampling-*.egg/nested_sampling/clustering
+<span class="c"># Install PTMCMCSampler</span>
+<span class="k">RUN</span> git clone https://github.com/jellis18/PTMCMCSampler.git <span class="se">\</span>
+<span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nb">cd</span> PTMCMCSampler <span class="o">&amp;&amp;</span> python setup.py install<span class="o">)</span>
 
-<span class="c"># add global environment variables</span>
-<span class="k">ENV</span> LD_LIBRARY_PATH /usr/local/lib:/samplers/PolyChordLite/lib:/samplers/UltraNest/nested_sampling/clustering:/samplers/MultiNest/MultiNest_v3.11_CMake/multinest/lib
-<span class="k">ENV</span> PYTHONPATH /usr/local/lib/python3.5/dist-packages/nested_sampling
+<span class="c"># Install rpy2 (get slightly older version, see https://stackoverflow.com/q/61491298/1862861) and MCMC package</span>
+<span class="k">RUN</span> wget https://cran.r-project.org/src/contrib/mcmc_0.9-7.tar.gz <span class="se">\</span>
+<span class="o">&amp;&amp;</span> R CMD INSTALL mcmc_0.9-7.tar.gz
+<span class="k">RUN</span> pip install <span class="nv">rpy2</span><span class="o">==</span><span class="m">3</span>.2.0
 
-<span class="c"># update alternatives to python3 (generally not what you should do, but it shouldn&#39;t be a problem in this container)</span>
-<span class="k">RUN</span> update-alternatives --install /usr/bin/python python /usr/bin/python3 <span class="m">10</span>
-<span class="k">RUN</span> update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 <span class="m">10</span>
+<span class="c"># Install Pyro</span>
+<span class="k">RUN</span> pip install torch
+<span class="k">RUN</span> pip install pyro-ppl
 
-<span class="c"># set PYTHONIOENCODING to utf-8</span>
-<span class="k">ENV</span> PYTHONIOENCODING utf-8
+<span class="c"># Install PyMC4</span>
+<span class="k">RUN</span> pip install git+https://github.com/pymc-devs/pymc4.git#egg<span class="o">=</span>pymc4
 
-<span class="c"># change to new working directory</span>
-<span class="k">WORKDIR</span><span class="s"> /work</span>
+<span class="c"># Install MC3</span>
+<span class="k">RUN</span> pip install mc3
+
+<span class="c"># Install Jupyter</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> jupyter -y --quiet
+
+<span class="c"># create IPython kernel</span>
+<span class="k">RUN</span> python -m ipykernel install --user --name <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> --display-name <span class="s2">&quot;Samplers&quot;</span>
+
+<span class="c"># Install CPU info package</span>
+<span class="k">RUN</span> pip install py-cpuinfo
 </code></pre></div>
 
 

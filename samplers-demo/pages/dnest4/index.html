@@ -584,12 +584,13 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 
 <p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
 on the straight line parameters $m$ and $c$.</p>
-<p>Python 2 and 3 Docker images with DNest4 installed are <a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, and to run with, e.g., the Python 2 container, you can do:</p>
-<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python2
+<p>A Python 3 Docker image with DNest4 installed is
+<a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, which can be used with:</p>
+<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python3
 </code></pre></div>
 
 
-<p>to enter an interactive container, and then within the contain run:</p>
+<p>to enter an interactive container, and then within the container the test script can be run with:</p>
 <div class="highlight"><pre><span></span><code>python test_DNest4.py
 </code></pre></div>
         </div>
