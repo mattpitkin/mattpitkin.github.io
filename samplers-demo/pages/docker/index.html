@@ -561,10 +561,31 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <figure class='code'>
 <figcaption><span>python3</span> <a href='/samplers-demo/downloads/code/dockerfiles/python3/Dockerfile'>download</a></figcaption>
 
-<div class="highlight"><pre><span></span><code><span class="k">FROM</span> <span class="s">continuumio/miniconda3</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span> <span class="s">quay.io/jitesoft/debian:buster-slim</span>
+
 <span class="k">LABEL</span> <span class="nv">name</span><span class="o">=</span><span class="s2">&quot;samplers-demo miniconda3&quot;</span> <span class="se">\</span>
 <span class="nv">maintainer</span><span class="o">=</span><span class="s2">&quot;Matthew Pitkin &lt;matthew.pitkin@ligo.org&gt;&quot;</span> <span class="se">\</span>
 <span class="nv">date</span><span class="o">=</span><span class="s2">&quot;20200205&quot;</span>
+
+<span class="k">ENV</span> <span class="nv">LANG</span><span class="o">=</span>C.UTF-8 <span class="nv">LC_ALL</span><span class="o">=</span>C.UTF-8
+<span class="k">ENV</span> PATH /opt/conda/bin:<span class="nv">$PATH</span>
+
+<span class="c"># copy stuff from continuumio docker file https://github.com/ContinuumIO/docker-images/blob/master/anaconda3/debian/Dockerfile</span>
+<span class="k">RUN</span> apt-get update --fix-missing <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    apt-get install -y --no-install-recommends wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 git mercurial subversion <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    apt-get clean <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    rm -rf /var/lib/apt/lists/* <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    wget --quiet https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh -O ~/anaconda.sh <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    /bin/bash ~/anaconda.sh -b -p /opt/conda <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    rm ~/anaconda.sh <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    <span class="nb">echo</span> <span class="s2">&quot;. /opt/conda/etc/profile.d/conda.sh&quot;</span> &gt;&gt; ~/.bashrc <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    <span class="nb">echo</span> <span class="s2">&quot;conda activate base&quot;</span> &gt;&gt; ~/.bashrc <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    find /opt/conda/ -follow -type f -name <span class="s1">&#39;*.a&#39;</span> -delete <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    find /opt/conda/ -follow -type f -name <span class="s1">&#39;*.js.map&#39;</span> -delete <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    /opt/conda/bin/conda clean -afy
+
+<span class="k">CMD</span> <span class="p">[</span> <span class="s2">&quot;/bin/bash&quot;</span> <span class="p">]</span>
 
 <span class="k">RUN</span> conda update -n base -c defaults conda
 
@@ -619,20 +640,20 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="c"># Install DNest4</span>
 <span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge dnest4
 
-<span class="c"># Install PyMC3</span>
-<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge pymc3
-
-<span class="c"># Install emcee</span>
-<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge emcee
-
 <span class="c"># Install ptemcee</span>
 <span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge ptemcee
 
 <span class="c"># Install PySTAN</span>
 <span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge pystan
 
+<span class="c"># Install emcee</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge emcee<span class="s2">&quot;&gt;=3.0&quot;</span>
+
 <span class="c"># Install bilby</span>
 <span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge bilby
+
+<span class="c"># Install zeus</span>
+<span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> -c conda-forge zeus-mcmc
 
 <span class="c"># Install pip-requirements</span>
 <span class="k">RUN</span> pip install --upgrade pip
@@ -642,21 +663,15 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 <span class="k">RUN</span> pip install ipykernel
 
 <span class="c"># Install samplers using pip</span>
-<span class="c"># Install PyJAGS</span>
-<span class="k">RUN</span> pip install --trusted-host pypi.python.org pyjags
+
+<span class="c"># Install PyMC3 (conda version is older)</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org pymc3
 
 <span class="c"># Install YAPS</span>
 <span class="k">RUN</span> pip install --trusted-host pypi.python.org yaps
 
 <span class="c"># Install edward2 and TensorFlow Probability</span>
 <span class="k">RUN</span> pip install tensorflow-probability edward2
-
-<span class="c"># Add PolyChord</span>
-<span class="k">RUN</span> git clone https://github.com/PolyChord/PolyChordLite.git <span class="se">\</span>
-<span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nb">cd</span> PolyChordLite <span class="o">&amp;&amp;</span> python setup.py --no-mpi install<span class="o">)</span>
-
-<span class="c"># Install Zeus</span>
-<span class="k">RUN</span> pip install zeus-mcmc
 
 <span class="c"># Install Sampyl</span>
 <span class="k">RUN</span> pip install sampyl-mcmc
@@ -682,6 +697,13 @@ have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/pages/sam
 
 <span class="c"># Install MC3</span>
 <span class="k">RUN</span> pip install mc3
+
+<span class="c"># Add PolyChord</span>
+<span class="k">RUN</span> git clone https://github.com/PolyChord/PolyChordLite.git <span class="se">\</span>
+<span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nb">cd</span> PolyChordLite <span class="o">&amp;&amp;</span> python setup.py --no-mpi install<span class="o">)</span>
+
+<span class="c"># Install PyJAGS</span>
+<span class="k">RUN</span> pip install --trusted-host pypi.python.org pyjags
 
 <span class="c"># Install Jupyter</span>
 <span class="k">RUN</span> conda install -n <span class="si">${</span><span class="nv">conda_env</span><span class="si">}</span> jupyter -y --quiet

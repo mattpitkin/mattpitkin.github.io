@@ -562,13 +562,13 @@ script shown below can be downloaded from <a href="http://mattpitkin.github.io/s
 <span class="n">argslist</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 <span class="c1"># set up the sampler</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">zeus</span><span class="o">.</span><span class="n">sampler</span><span class="p">(</span><span class="n">Nens</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">logposterior</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">argslist</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">zeus</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="n">Nens</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">logposterior</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">argslist</span><span class="p">)</span>
 
 <span class="c1"># pass the initial samples and total number of samples required</span>
 <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="n">inisamples</span><span class="p">,</span> <span class="n">Nsamples</span><span class="o">+</span><span class="n">Nburnin</span><span class="p">);</span>
 
 <span class="c1"># extract the samples (removing the burn-in)</span>
-<span class="n">postsamples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">get_chain</span><span class="p">(</span><span class="n">flatt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">discrd</span><span class="o">=</span><span class="n">Nburnin</span><span class="p">)</span>
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">get_chain</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">discrd</span><span class="o">=</span><span class="n">Nburnin</span><span class="p">)</span>
 
 <span class="c1"># plot posterior samples (if corner.py is installed)</span>
 <span class="k">try</span><span class="p">:</span>
