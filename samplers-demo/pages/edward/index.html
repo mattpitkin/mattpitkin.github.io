@@ -6,7 +6,7 @@
         <meta name="author" content="Matthew Pitkin">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <title>Samplers Demo - Tags | Samplers Demo</title>
+        <title>An example using Edward | Samplers Demo</title>
 
 	<link rel="shortcut icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
@@ -424,34 +424,182 @@ article .meta a.comments_btn:hover {
         </header>
 
         <div id="wrap">
-    <h1>Tags for Samplers Demo</h1>
-    <ul>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/cpnest.html">CPNest</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/dnest4.html">DNest4</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/docker.html">Docker</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/dynesty.html">dynesty</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/edward.html">Edward</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/edward-2.html">Edward 2</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/emcee.html">emcee</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html">MCMC</a> (10)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/nested-sampling.html">nested sampling</a> (8)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/nestle.html">Nestle</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pyjags.html">PyJAGS</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pymc3.html">PyMC3</a> (3)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pymc4.html">PyMC4</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pymultinest.html">PyMultiNest</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pypolychord.html">PyPolyChord</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/pystan.html">PyStan</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/reduced-order-modelling.html">Reduced Order Modelling</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/reduced-order-quadrature.html">Reduced Order Quadrature</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/rom.html">ROM</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/roq.html">ROQ</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow.html">TensorFlow</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow-probability.html">TensorFlow Probability</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/theano.html">Theano</a> (1)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/ultranest.html">UltraNest</a> (2)</li>
-        <li><a href="http://mattpitkin.github.io/samplers-demo/tag/zeus.html">zeus</a> (2)</li>
-    </ul>
+<div class="container post">
+    <article>
+        <header>
+            <h1>An example using Edward</h1>
+            <time datetime="article.date.isoformat()" pubdate>Thu 29 March 2018</time>
+        </header>
+
+        <div class="article_content">
+            
+<p>Here we show a standalone example of using <a href="http://edwardlib.org/">Edward</a> to
+estimate the parameters of a straight line model in data with Gaussian noise. The
+data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
+from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
+script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_edward.py">here</a>.</p>
+
+
+<h2>Example code</h2>
+<figure class='code'>
+<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_edward.py'>download</a></figcaption>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example of running edward to fit the parameters of a straight line.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
+
+<span class="c1"># import edward and TensorFlow</span>
+<span class="kn">import</span> <span class="nn">edward</span> <span class="k">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">edward.models</span> <span class="kn">import</span> <span class="n">Normal</span><span class="p">,</span> <span class="n">Uniform</span><span class="p">,</span> <span class="n">Empirical</span>
+
+<span class="c1"># import model and data</span>
+<span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># set the priors</span>
+<span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span> <span class="c1"># lower range of uniform distribution on c</span>
+<span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>  <span class="c1"># upper range of uniform distribution on c</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">cmax</span><span class="p">)</span>
+
+<span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>     <span class="c1"># mean of Gaussian distribution on m</span>
+<span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span> <span class="c1"># standard deviation of Gaussian distribution on m</span>
+<span class="n">mp</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mmu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">msigma</span><span class="p">)</span>
+
+<span class="c1"># set the likelihood containing the model</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">mp</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">cp</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+
+<span class="c1"># set number of samples</span>
+<span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">2000</span> <span class="c1"># final number of samples</span>
+<span class="n">Ntune</span> <span class="o">=</span> <span class="mi">2000</span>    <span class="c1"># number of tuning samples</span>
+
+<span class="c1"># set parameters to infer</span>
+<span class="n">qm</span> <span class="o">=</span> <span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nsamples</span><span class="o">+</span><span class="n">Ntune</span><span class="p">)))</span>
+<span class="n">qc</span> <span class="o">=</span> <span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nsamples</span><span class="o">+</span><span class="n">Ntune</span><span class="p">)))</span>
+
+<span class="c1"># use Hamiltonian Monte Carlo</span>
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">HMC</span><span class="p">({</span><span class="n">mp</span><span class="p">:</span> <span class="n">qm</span><span class="p">,</span> <span class="n">cp</span><span class="p">:</span> <span class="n">qc</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">y</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">)</span> <span class="c1"># higher steps sizes can lead to zero acceptance rates</span>
+
+<span class="c1"># extract the samples</span>
+<span class="n">msamples</span> <span class="o">=</span> <span class="n">qm</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">()[</span><span class="n">Ntune</span><span class="p">:]</span>
+<span class="n">csamples</span> <span class="o">=</span> <span class="n">qc</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">()[</span><span class="n">Ntune</span><span class="p">:]</span>
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">msamples</span><span class="p">,</span> <span class="n">csamples</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># plot posterior samples (if corner.py is installed)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;edward.png&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</figure>
+<h2>Running the code</h2>
+<p>If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_edward.py"><code>test_edward.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
+<div class="highlight"><pre><span></span><code>python test_edward.py
+</code></pre></div>
+
+<p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
+on the straight line parameters $m$ and $c$.</p>
+<p>Python 2 and 3 Docker images with edward installed are <a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, and to run with, e.g., the Python 2 container, you can do:</p>
+<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python2
+</code></pre></div>
+
+<p>to enter an interactive container, and then within the contain run:</p>
+<div class="highlight"><pre><span></span><code>python test_edward.py
+</code></pre></div>
+        </div>
+
+        <div class="meta">
+            <div>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/edward.html" class="tag">Edward</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+            </div>
+        </div>
+    </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'sampler-demos';
+      var disqus_identifier = '/pages/edward/';
+      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/edward/';
+      var disqus_title = 'An example using Edward';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  </section>
+
+</div>
+
+<style type="text/css">
+{
+    max-width: 700px;
+}
+
+.text_cell .prompt {
+    display: none;
+}
+
+div.cell {
+    padding: 0;
+}
+
+div.text_cell_render {
+    padding: 0;
+}
+
+div.prompt {
+    font-size: 13px;
+}
+
+div.input_prompt {
+    padding: .7em 0.2em;
+}
+
+div.output_prompt {
+    padding: .4em .2em;
+}
+
+div.input_area {
+    margin: .2em 0.4em;
+    max-width: 580px;
+}
+
+table.dataframe {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+table.dataframe th, td {
+    padding: 4px;
+    text-align: left;
+}
+
+pre code {
+    background-color: inherit;
+}</style>
+
         </div>
 <!--
     <footer>

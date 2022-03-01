@@ -6,7 +6,7 @@
         <meta name="author" content="Matthew Pitkin">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <title>Samplers demo | Samplers Demo</title>
+        <title>An example using PyMC4 | Samplers Demo</title>
 
 	<link rel="shortcut icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/samplers-demo/favicon.ico" type="image/x-icon">
@@ -424,97 +424,192 @@ article .meta a.comments_btn:hover {
         </header>
 
         <div id="wrap">
-
 <div class="container post">
     <article>
-        <header class="about">
-          <h1>Samplers demo</h1>
-	  
+        <header>
+            <h1>An example using PyMC4</h1>
+            <time datetime="article.date.isoformat()" pubdate>Mon 03 September 2018</time>
+        </header>
+
         <div class="article_content">
-            <p>This site aims gives a demonstration of <a href="#Samplers">thirteen different</a> <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>
-and <a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">nested sampling</a> algorithms that are
-either written in Python, or have Python-wrapper implementations. The demonstration is a simple toy
-model of estimating the posteriors on the parameters of a straight line in Gaussian noise of known variance.</p>
-<h2>Samplers</h2>
-<p>The MCMC samplers used are:</p>
-<ol>
-<li><a href="http://dfm.io/emcee/current/">emcee</a></li>
-<li><a href="https://www.tensorflow.org/probability/">TensorFlow Probability</a></li>
-<li><a href="https://github.com/pymc-devs/pymc4/">PyMC4</a></li>
-<li><a href="https://zeus-mcmc.readthedocs.io/en/latest/index.html">Zeus</a></li>
-<li><a href="http://pystan.readthedocs.io/en/latest/">PyStan</a></li>
-<li><a href="https://pyjags.readthedocs.io/en/latest/">PyJAGS</a></li>
-</ol>
-<p>The nested sampling algorithms implementations uses are:</p>
-<ol>
-<li><a href="http://kylebarbary.com/nestle/">Nestle</a></li>
-<li><a href="https://johnveitch.github.io/cpnest/">CPNest</a></li>
-<li><a href="https://dynesty.readthedocs.io">dynesty</a></li>
-<li><a href="https://github.com/JohannesBuchner/UltraNest">UltraNest</a></li>
-<li><a href="https://johannesbuchner.github.io/PyMultiNest/">PyMultiNest</a></li>
-<li><a href="https://github.com/eggplantbren/DNest4">DNest4</a></li>
-<li><a href="https://ccpforge.cse.rl.ac.uk/gf/project/polychord/">PyPolyChord</a></li>
-</ol>
-<p>A page showing a demonstration and comparison of all the samplers on a fixed data set can be found
-<a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">here</a>.</p>
-<h2>Examples</h2>
-<p>Standalone examples for each sampler can be found at the links below:</p>
-<ul>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/emcee/">emcee example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pymc3/">PyMC3 example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/zeus/">Zeus example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pystan/">PyStan example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pyjags/">PyJAGS example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/tensorflow-probability/">TensorFlow Probability example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/nestle/">Nestle example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/cpnest/">CPNest example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/dynesty/">dynesty example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/ultranest/">UltraNest example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pymultinest/">PyMultiNest example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/dnest4/">DNest4 example</a></li>
-<li><a href="http://mattpitkin.github.io/samplers-demo/pages/pypolychord/">PyPolyChord example</a></li>
-</ul>
-<p>Information on <a href="https://docs.docker.com/">Docker</a> images that can be used to run all
-the samplers mentioned above can be found <a href="http://mattpitkin.github.io/samplers-demo/pages/docker/">here</a>.</p>
-<h2>Acknowlegdments</h2>
-<p>The samplers mentioned above are obviously the work of a lot of people and I am very much indebted to
-them for producing the software. Hopefully, this site will make it slightly easier for some more people to
-get started using them. References for each of the packages can be found in the appropriate section of
-the <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/">demonstration page</a>.</p>
-<p>This site is heavily based on the <a href="http://jakevdp.github.io/"><em>Pythonic Perambulations</em></a> blog by <a href="http://vanderplas.com/">Jake
-VanderPlas</a>, and was created using <a href="http://docs.getpelican.com/en/stable/">Pelican</a>.
-The source code for the site can be found on GitHub <a href="https://github.com/mattpitkin/samplers-demo/">here</a>,
-and any problems/suggestions can be submitted as
-<a href="https://github.com/mattpitkin/samplers-demo/issues">issues</a> there, or left as comments on the various pages
-here.</p>
-<p>Also deserving thanks are: <a href="https://github.com/cpankow">Chris Pankow</a> for spotting and fixing many typos and adding useful information to the
-<a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#emcee">emcee section</a> of the sampler demonstration page; <a href="https://github.com/j-faria">João Faria</a> for spotting a problem with the DNest4 example
-and suggesting a fix; and, <a href="https://github.com/JohannesBuchner">Johannes Buchner</a> for useful information about effective sample sizes.</p>
-<h3>The author</h3>
-<p>My name is <a href="https://ma.ttpitk.in">Matthew Pitkin</a> and I'm an astrophysicist working on gravitational-wave data analysis in
-the <a href="https://www.lancaster.ac.uk/physics/">Department of Physics</a> at the
-<a href="https://www.lancaster.ac.uk">Lancaster University</a>.</p>
+            
+<p>Here we show a standalone example of using <a href="https://github.com/pymc-devs/pymc4">PyMC4</a> to
+estimate the parameters of a straight line model in data with Gaussian noise. The
+data and model used in this example are defined in <code>createdata.py</code>, which can be downloaded
+from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py">here</a>. The
+script shown below can be downloaded from <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_pymc4.py">here</a>.</p>
+
+
+<h2>Example code</h2>
+<figure class='code'>
+<figcaption><span></span> <a href='/samplers-demo/downloads/code/test_pymc4.py'>download</a></figcaption>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example of running PyMC4 to fit the parameters of a straight line.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span> <span class="c1"># force Matplotlib backend to Agg</span>
+
+<span class="c1"># import PyMC4</span>
+<span class="kn">import</span> <span class="nn">pymc4</span> <span class="k">as</span> <span class="nn">pm4</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="c1"># import model and data</span>
+<span class="kn">from</span> <span class="nn">createdata</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">cmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.</span>  <span class="c1"># lower range of uniform distribution on c</span>
+<span class="n">cmax</span> <span class="o">=</span> <span class="mf">10.</span>   <span class="c1"># upper range of uniform distribution on c</span>
+
+<span class="n">mmu</span> <span class="o">=</span> <span class="mf">0.</span>      <span class="c1"># mean of Gaussian distribution on m</span>
+<span class="n">msigma</span> <span class="o">=</span> <span class="mf">10.</span>  <span class="c1"># standard deviation of Gaussian distribution on m</span>
+
+<span class="c1"># convert x values and data to tensors</span>
+<span class="n">xtensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">datatensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># model must be wrapped with the model decorator</span>
+<span class="nd">@pm4</span><span class="o">.</span><span class="n">model</span>
+<span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">):</span>
+    <span class="n">cvalue</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">cmax</span><span class="p">)</span>  <span class="c1"># prior on c</span>
+    <span class="n">mvalue</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mmu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">msigma</span><span class="p">)</span> <span class="c1"># prior on m</span>
+    
+    <span class="c1"># the straight line model</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">cvalue</span> <span class="o">+</span> <span class="n">mvalue</span> <span class="o">*</span> <span class="n">x</span>
+    
+    <span class="c1"># the likelihood</span>
+    <span class="k">yield</span> <span class="n">pm4</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;t_obs&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># final number of samples</span>
+<span class="n">Nburn</span> <span class="o">=</span> <span class="mi">2000</span>     <span class="c1"># number of tuning samples</span>
+
+<span class="c1"># perform the sampling</span>
+<span class="n">pymc4_trace</span> <span class="o">=</span> <span class="n">pm4</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">xtensor</span><span class="p">,</span> <span class="n">datatensor</span><span class="p">),</span>
+    <span class="n">num_chains</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">burn_in</span><span class="o">=</span><span class="n">Nburn</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">postsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span>
+    <span class="n">pymc4_trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;model/m&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+    <span class="n">pymc4_trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;model/c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># plot posterior samples (if corner.py is installed)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">corner</span> <span class="c1"># import corner.py</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of posterior samples is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">postsamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">postsamples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$m$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$c$&quot;</span><span class="p">],</span> <span class="n">truths</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;pymc4.png&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</figure>
+<h2>Running the code</h2>
+<p>A description of installing PyMC4 is given <a href="http://mattpitkin.github.io/samplers-demo/pages/samplers-samplers-everywhere/#PyMC4">here</a>. If you have downloaded the <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/createdata.py"><code>createdata.py</code></a> and <a href="http://mattpitkin.github.io/samplers-demo/downloads/code/test_pymc4.py"><code>test_pymc4.py</code></a> scripts into the directory <code>${HOME}</code>, then you can run it using:</p>
+<div class="highlight"><pre><span></span><code>python test_PyMC4.py
+</code></pre></div>
+
+<p>If you have <a href="https://matplotlib.org/">Matplotlib</a> installed then the script will produce a plot of the posterior distributions
+on the straight line parameters $m$ and $c$.</p>
+<p>A Python 3 Docker image with PyMC4 installed is
+<a href="https://hub.docker.com/r/mattpitkin/samplers/tags/">available</a>, which can be used with:</p>
+<div class="highlight"><pre><span></span><code>docker run -it -v <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>:/work mattpitkin/samplers:python3
+</code></pre></div>
+
+<p>to enter an interactive container, and then within the container the test script can be run with:</p>
+<div class="highlight"><pre><span></span><code>python test_pymc4.py
+</code></pre></div>
         </div>
 
+        <div class="meta">
+            <div>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/pymc4.html" class="tag">PyMC4</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/mcmc.html" class="tag">MCMC</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/tensorflow-probability.html" class="tag">TensorFlow Probability</a>
+                    <a href="http://mattpitkin.github.io/samplers-demo/tag/edward-2.html" class="tag">Edward 2</a>
+            </div>
+        </div>
     </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'sampler-demos';
+      var disqus_identifier = '/pages/pymc4/';
+      var disqus_url = 'http://mattpitkin.github.io/samplers-demo/pages/pymc4/';
+      var disqus_title = 'An example using PyMC4';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  </section>
+
 </div>
 
-<div class="container post">
-<article> <!-- Use article tag so that "social-links" class can be used -->
-<header class="about container">
-<div class="social-links container">
-	    <ul>
-	      <li><a href="https://ma.ttpitk.in" rel="me">website</a></li>
-	      <li><a href="http://cosmiczoo.blogspot.com" rel="me">blog</a></li>
-	      <li><a class="nodec icon-twitter" href="http://twitter.com/matt_pitkin" rel="me"></a></li>
-	      <li><a class="nodec icon-github" href="http://github.com/mattpitkin" rel="me"></a></li>
-	      <li><a class="nodec icon-stackoverflow" href="https://stackoverflow.com/users/1862861/matt-pitkin" rel="me"></a></li>
-	    </ul>
-</div>
-</header>
-</article>
-</div>
+<style type="text/css">
+{
+    max-width: 700px;
+}
 
+.text_cell .prompt {
+    display: none;
+}
+
+div.cell {
+    padding: 0;
+}
+
+div.text_cell_render {
+    padding: 0;
+}
+
+div.prompt {
+    font-size: 13px;
+}
+
+div.input_prompt {
+    padding: .7em 0.2em;
+}
+
+div.output_prompt {
+    padding: .4em .2em;
+}
+
+div.input_area {
+    margin: .2em 0.4em;
+    max-width: 580px;
+}
+
+table.dataframe {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+table.dataframe th, td {
+    padding: 4px;
+    text-align: left;
+}
+
+pre code {
+    background-color: inherit;
+}</style>
 
         </div>
 <!--
