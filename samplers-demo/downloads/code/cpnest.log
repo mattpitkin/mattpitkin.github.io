@@ -1,0 +1,11 @@
+2021-05-19, 12:18:06 - cpnest.cpnest.CPNest                  : Running with 1 parallel threads
+2021-05-19, 12:18:24 - cpnest.sampler.Sampler                : Sampler process 1281194: MCMC samples accumulated = 594764
+2021-05-19, 12:18:24 - cpnest.sampler.Sampler                : Sampler process 1281194 - mean acceptance 0.498: exiting
+2021-05-19, 12:18:24 - cpnest.NestedSampling.NestedSampler   : Final evidence: -87.68
+2021-05-19, 12:18:24 - cpnest.NestedSampling.NestedSampler   : Information: 10.63
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Computed log_evidences: (-87.68679859987542,)
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Relative weights of input files: [1.0]
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Relative weights of input files taking into account their length: [1.0]
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Number of input samples: [15324]
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Expected number of samples from each input file [2762]
+2021-05-19, 12:18:25 - cpnest.nest2pos                       : Samples produced: 2762
